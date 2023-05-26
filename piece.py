@@ -12,7 +12,9 @@ class PieceGUI:
         self.y = y  # related to board
         self.code = code
         self.size = size
-        self.image_obj = self.load(batch, board)
+        self.sprite_width = 0
+        self.sprite_height = 0
+        self.sprite = self.load(batch, board)
 
     def __repr__(self):
         return f'x: {self.x}, y: {self.y}, img:images/{self.code}.png'
@@ -20,8 +22,10 @@ class PieceGUI:
     def load(self, batch, board):  # loads the sprite into the window
         image = pyglet.image.load(f"images/{self.code}.png")
         sprite = pyglet.sprite.Sprite(image, batch=batch)
-        sprite.scale_x = self.size / sprite.width
-        sprite.scale_y = self.size / sprite.height
+        self.sprite_width = sprite.width
+        self.sprite_height = sprite.height
+        sprite.scale_x = self.size / self.sprite_width
+        sprite.scale_y = self.size / self.sprite_height
         sprite.x = board.get_abs_x(self.x)
         sprite.y = board.get_abs_y(self.y)
         return sprite
@@ -32,10 +36,18 @@ class PieceGUI:
         self.x = new_x
         self.y = new_y
 
-        self.image_obj.x = board.get_abs_x(new_x)
-        self.image_obj.y = board.get_abs_y(new_y)
+        self.sprite.x = board.get_abs_x(new_x)
+        self.sprite.y = board.get_abs_y(new_y)
 
         board.get_square(self.x, self.y).set_piece(self)
+
+    def update_graphics(self, new_size, board):
+        self.size = new_size
+        self.sprite.scale_x = self.size / self.sprite_width
+        self.sprite.scale_y = self.size / self.sprite_height
+        self.sprite.x = board.get_abs_x(self.x)
+        self.sprite.y = board.get_abs_y(self.y)
+
 
 
 """

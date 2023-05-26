@@ -12,3 +12,16 @@ class SquareState(Enum):
     IDLE = 0
     SELECTED = 1
     MOVABLE = 2
+
+
+class Side(Enum):
+    TOP = 0
+    BOTTOM = 1
+    LEFT = 2
+    RIGHT = 3
+    CENTRE = 4
+
+
+class GUIObjects(Enum):
+    BUTTON = 0
+

@@ -1,4 +1,4 @@
-import pyglet
+from enumerators import GUIObjects
 
 
 def handle_first_click(x, y, button, modifiers, board):  # handles a first click on the board
@@ -26,23 +26,34 @@ def handle_second_click(x, y, button, modifiers, board, game_state):  # handles 
 
 
 def on_board(x, y, board):  # returns true iff the click was on the board
-    return board.padding < x < board.size + board.padding and board.padding < y < board.size + board.padding
+    return board.padding[0] < x < board.size + board.padding[0] and board.padding[1] < y < board.size + board.padding[1]
 
 
-def on_button(x, y):  # returns true iff the click was on a button
-    pass
+def on_button(x, y, window_size, GUI_objects):  # returns true iff the click was on a button
+    for object_ in GUI_objects:
+        if object_.type == GUIObjects.BUTTON:
+            if object_.is_over_button(x, y, window_size):
+                return True
+    return False
+
+def get_button(x, y, window_size, GUI_objects):
+    for object_ in GUI_objects:
+        if object_.type == GUIObjects.BUTTON:
+            if object_.is_over_button(x, y, window_size):
+                return object_
 
 
-def handle_button(x, y, button, modifiers):  # handles a click if it was on a button
-    pass
+def handle_button(x, y, button, modifiers, window_size,  GUI_objects):  # handles a click if it was on a button
+    button = get_button(x, y, window_size, GUI_objects)
+    button.click()
 
 
 def handle_empty_click(x, y, button, modifiers, board):  # handles a click on nothing
     board.deselect()
 
 
-def handle_cursor_type(x, y, board, window):  # changes the cursor type depending on the location
-    if on_board(x, y, board) or on_button(x, y):
+def handle_cursor_type(x, y, board, window, GUI_objects):  # changes the cursor type depending on the location
+    if on_board(x, y, board) or on_button(x, y, (window.width, window.height), GUI_objects):
         cursor = window.get_system_mouse_cursor(window.CURSOR_HAND)
         window.set_mouse_cursor(cursor)
     else:
@@ -50,5 +61,11 @@ def handle_cursor_type(x, y, board, window):  # changes the cursor type dependin
         window.set_mouse_cursor(cursor)
 
 
-def handle_button_hover(x, y):  # changes the color of the button when going over it with the cursor
-    pass
+def handle_button_hover(x, y, window_size, GUI_objects):  # changes the color of the button when going over it with the cursor
+    if on_button(x, y, window_size, GUI_objects):
+        button = get_button(x, y, window_size, GUI_objects)
+        button.select_button()
+    else:
+        for object_ in GUI_objects:
+            if object_.type == GUIObjects.BUTTON:
+                object_.deselect_button()

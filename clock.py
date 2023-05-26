@@ -1,16 +1,13 @@
 import pyglet
 from math import floor
-from enumerators import Color
 
 
 class Clock:
-    def __init__(self, color, batch, x, time=60_000):
+    def __init__(self, color, batch, padding_x, padding_y, window_x, time=60_000):
+        self.padding = [padding_x, padding_y]
         self.color = color
         self.time = time  # milliseconds
-        if color == Color.WHITE:
-            y = 80
-        else:
-            y = 40
+
         seconds = (self.time/1000) % 60
         if seconds == 0:
             seconds = "00"
@@ -19,8 +16,8 @@ class Clock:
         self.label = pyglet.text.Label(text=str(floor(self.time/60_000)) + ":" + seconds,
                                        font_name='Arial',
                                        font_size=36,
-                                       x=x,
-                                       y=y,
+                                       x=window_x - padding_x,
+                                       y=padding_y,
                                        batch=batch)
 
     def get_time(self):
@@ -38,3 +35,8 @@ class Clock:
             else:
                 seconds = str(seconds)
             self.label.text = str(floor(self.time / 60_000)) + ":" + seconds
+
+    def update_graphics(self, padding_x, padding_y, width):
+        self.padding = [padding_x, padding_y]
+        self.label.x = width - padding_x
+        self.label.y = padding_y
