@@ -161,6 +161,11 @@ class Game:
                 return False
 
     def move(self, from_square, to_square):  # moves a piece from from_square to to_square
+        # CANT MOVE THE KING YET, WE HAVE TO ADD A FUNCTION THAT CALLS MOVE WHENEVER A PLAYER TRIES TO MOVE A PIECE.
         if not self.is_valid_move(from_square, to_square):
             raise Exception("you requested an invalid move")
+        for piece in self.pieces:
+            if piece.x == from_square.x and piece.y == from_square.y:
+                piece.x, piece.y = to_square.x, to_square.y
+                break
 
