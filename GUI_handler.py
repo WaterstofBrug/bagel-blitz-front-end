@@ -50,7 +50,7 @@ class GUI:
         for button in self.buttons:
             button.update_graphics(new_window_width, new_window_height)
 
-        for i, clock in enumerate (self.clocks):
+        for i, clock in enumerate(self.clocks):
             offset = 0
             if i == 0:
                 offset = -50

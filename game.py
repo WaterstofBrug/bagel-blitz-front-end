@@ -1,7 +1,6 @@
 from enumerators import Color
 from piece import PieceLogic
 
-
 """
 Game class stores and handles all the game state data.
 """
@@ -45,7 +44,7 @@ class Game:
             return "B" if self.color_to_move == Color.WHITE else "W"
 
         def get_piececode_given_square(x, y):  # returns the piece code given the pieces location,
-                                                # if no piece is at the location it returns "EMPTY"
+            # if no piece is at the location it returns "EMPTY"
             for piecelogic in self.pieces:
                 if piecelogic.x == x and piecelogic.y == y:
                     return piecelogic.code
@@ -105,10 +104,10 @@ class Game:
             # diagonal line upper right
             for step in range(max(square.x, square.y), 8):
                 if not contains_given_pieces(square.x + step - max(square.x, square.y),
-                                         square.y + step - max(square.x, square.y),
-                                         [opponents_color + "B", opponents_color + "Q"]):
+                                             square.y + step - max(square.x, square.y),
+                                             [opponents_color + "B", opponents_color + "Q"]):
                     if not contains_given_piece(square.x + step - max(square.x, square.y),
-                                         square.y + step - max(square.x, square.y), "EMPTY"):
+                                                square.y + step - max(square.x, square.y), "EMPTY"):
                         break
                     else:
                         continue
@@ -118,7 +117,7 @@ class Game:
             # diagonal line lower right
             for step in range(0, min(7 - square.x, square.y) + 1):
                 if not contains_given_pieces(square.x + step, square.y - step,
-                                         [opponents_color + "B", opponents_color + "Q"]):
+                                             [opponents_color + "B", opponents_color + "Q"]):
                     if not contains_given_piece(square.x + step, square.y - step, "EMPTY"):
                         break
                     else:
@@ -129,7 +128,7 @@ class Game:
             # diagonal line upper left
             for step in range(0, min(square.x, 7 - square.y) + 1):
                 if not contains_given_pieces(square.x - step, square.y + step,
-                                         [opponents_color + "B", opponents_color + "Q"]):
+                                             [opponents_color + "B", opponents_color + "Q"]):
                     if not contains_given_piece(square.x - step, square.y + step, "EMPTY"):
                         break
                     else:
@@ -137,11 +136,10 @@ class Game:
                 else:
                     return False
 
-
             # diagonal line lower left
             for step in range(0, min(square.x, square.y) + 1):
                 if not contains_given_pieces(square.x - step, square.y - step,
-                                         [opponents_color + "B", opponents_color + "Q"]):
+                                             [opponents_color + "B", opponents_color + "Q"]):
                     if not contains_given_piece(square.x - step, square.y - step, "EMPTY"):
                         break
                     else:
@@ -154,7 +152,7 @@ class Game:
             return True
 
         def move_puts_king_in_check():  # returns true if the given move indeed puts the king in check.
-                                        # STILL NEED TO CHECK FOR MOVING THORUGH PIECES.
+            # STILL NEED TO CHECK FOR MOVING THORUGH PIECES.
             king_code = "WK" if self.color_to_move == Color.WHITE else "BK"
             kingpiece = self.pieces[0]
             for piecelogic in self.pieces:
@@ -209,7 +207,8 @@ class Game:
                 # case where the moving piece was aligned diagonally with the king.
                 if abs(from_square.x - kingpiece.x) == abs(from_square.y - kingpiece.y):
                     # if the piece remains in the same diagonal it should be fine
-                    if abs(from_square.x - kingpiece.x) == abs(to_square.x - from_square.x) == abs(to_square.y - from_square.y):
+                    if abs(from_square.x - kingpiece.x) == abs(to_square.x - from_square.x) == abs(
+                            to_square.y - from_square.y):
                         return False
                     else:
                         # split into the four cases where the moving piece can be upper right, lower right, upper left, or lower left
@@ -218,8 +217,10 @@ class Game:
                             for x in range(from_square.x, 7):
                                 if from_square.y + x - from_square.x > 7:
                                     return False
-                                if get_piececode_given_square(x, from_square.y + x - from_square.x) == get_opponents_color() + "B" or \
-                                    get_piececode_given_square(x, from_square.y + x - from_square.x) == get_opponents_color() + "Q":
+                                if get_piececode_given_square(x,
+                                                              from_square.y + x - from_square.x) == get_opponents_color() + "B" or \
+                                        get_piececode_given_square(x,
+                                                                   from_square.y + x - from_square.x) == get_opponents_color() + "Q":
                                     return True
                             return False
 
@@ -228,8 +229,10 @@ class Game:
                             for x in range(from_square.x, 7):
                                 if from_square.y + x - from_square.x < 0:
                                     return False
-                                if get_piececode_given_square(x, from_square.y - (x - from_square.x)) == get_opponents_color() + "B" or \
-                                    get_piececode_given_square(x, from_square.y - (x - from_square.x)) == get_opponents_color() + "Q":
+                                if get_piececode_given_square(x, from_square.y - (
+                                        x - from_square.x)) == get_opponents_color() + "B" or \
+                                        get_piececode_given_square(x, from_square.y - (
+                                                x - from_square.x)) == get_opponents_color() + "Q":
                                     return True
                             return False
 
@@ -238,8 +241,10 @@ class Game:
                             for y in range(from_square.y, 7):
                                 if from_square.x - (y - from_square.y) < 0:
                                     return False
-                                if get_piececode_given_square(from_square.x - (y - from_square.y), y) == get_opponents_color() + "B" or \
-                                    get_piececode_given_square(from_square.x - (y - from_square.y), y) == get_opponents_color() + "Q":
+                                if get_piececode_given_square(from_square.x - (y - from_square.y),
+                                                              y) == get_opponents_color() + "B" or \
+                                        get_piececode_given_square(from_square.x - (y - from_square.y),
+                                                                   y) == get_opponents_color() + "Q":
                                     return True
                             return False
 
@@ -248,8 +253,10 @@ class Game:
                             for y in range(from_square.y, 0, -1):
                                 if from_square.x - (from_square.y - y) < 0:
                                     return False
-                                if get_piececode_given_square(from_square.x - (from_square.y - y), y) == get_opponents_color() + "B" or \
-                                    get_piececode_given_square(from_square.x - (from_square.y - y), y) == get_opponents_color() + "W":
+                                if get_piececode_given_square(from_square.x - (from_square.y - y),
+                                                              y) == get_opponents_color() + "B" or \
+                                        get_piececode_given_square(from_square.x - (from_square.y - y),
+                                                                   y) == get_opponents_color() + "W":
                                     return True
                             return False
 
@@ -277,11 +284,21 @@ class Game:
                 return False
             case "P":  # Pawn
                 # TODO: EN PASSENT STILL HAS TO BE IMPLEMENTED
+                def basic_pawn_move_check():
+                    pawn_takes = abs(from_square.x - to_square.x) == 1 and not self.square_is_empty(to_square) and \
+                                 get_piececode_given_square(to_square.x, to_square.y)[0] == get_opponents_color()
+                    pawn_goes_straight = from_square.x == to_square.x
+                    return (pawn_goes_straight and self.square_is_empty(to_square)) or pawn_takes
+
                 if piece.get_color() == Color.WHITE:
-                    if to_square.y - from_square.y == 1 or (to_square.y - from_square.y == 2 and from_square.y == 1):
+                    if to_square.y - from_square.y == 1 and basic_pawn_move_check() or \
+                            (to_square.y - from_square.y == 2 and from_square.y == 1 and from_square.x == to_square.x
+                             and self.square_is_empty(to_square)):
                         return basic_move_restriction()
                 else:
-                    if to_square.y - from_square.y == -1 or (to_square.y - from_square.y == -2 and from_square.y == 6):
+                    if to_square.y - from_square.y == -1 and basic_pawn_move_check() or \
+                            (to_square.y - from_square.y == -2 and from_square.y == 6 and from_square.x == to_square.x
+                             and self.square_is_empty(to_square)):
                         return basic_move_restriction()
                 return False
             case "Q":  # TODO: Queen
@@ -297,6 +314,9 @@ class Game:
     def move(self, from_square, to_square):  # moves a piece from from_square to to_square
         if not self.is_valid_move(from_square, to_square):
             raise Exception("you requested an invalid move")
+
+        self.history.append(self.pieces)
+
         if not self.square_is_empty(to_square):
             self.take_on(to_square)
         for piece in self.pieces:
