@@ -50,97 +50,63 @@ class Game:
                     return piecelogic.code
             return "EMPTY"
 
+        def contains_given_piece(x, y, piece_code):
+            return get_piececode_given_square(x, y) == piece_code
+
+        def contains_given_pieces(x, y, piece_codes):
+            for piece_code in piece_codes:
+                if contains_given_piece(x, y, piece_code):
+                    return True
+            return False
+
         def square_is_not_attacked(square): # returns true if the given square is not under attack, false otherwise
             # vertical line above given square
+            opponents_color = get_opponents_color()
             for y in range(square.y, 7):
-                if get_piececode_given_square(square.x, y) != get_opponents_color() + "R" and \
-                        get_piececode_given_square(square.x, y) != get_opponents_color() + "Q":
-                    if get_piececode_given_square(square.x, y) != "EMPTY":
-                        break
-                    else:
-                        continue
-                else:
+                if contains_given_pieces(square.x, y, [opponents_color + "R", opponents_color + "Q"]):
                     return False
 
             # vertical line under given square
             for y in range(square.y, 0, -1):
-                if get_piececode_given_square(square.x, y) != get_opponents_color() + "R" and \
-                        get_piececode_given_square(square.x, y) != get_opponents_color() + "Q":
-                    if get_piececode_given_square(square.x, y) != "EMPTY":
-                        break
-                    else:
-                        continue
-                else:
+                if contains_given_pieces(square.x, y, [opponents_color + "R", opponents_color + "Q"]):
                     return False
 
             # horizontal line to the right of the given square
             for x in range(square.x, 7):
-                if get_piececode_given_square(x, square.y) != get_opponents_color() + "R" and \
-                        get_piececode_given_square(x, square.y) != get_opponents_color() + "Q":
-                    if get_piececode_given_square(x, square.y) != "EMPTY":
-                        break
-                    else:
-                        continue
-                else:
+                if contains_given_pieces(x, square.y, [opponents_color + "R", opponents_color + "Q"]):
                     return False
 
             # horizontal line to the left of the given square
             for x in range(square.x, 0, -1):
-                if get_piececode_given_square(x, square.y) != get_opponents_color() + "R" and \
-                        get_piececode_given_square(x, square.y) != get_opponents_color() + "Q":
-                    if get_piececode_given_square(x, square.y) != "EMPTY":
-                        break
-                    else:
-                        continue
-                else:
+                if contains_given_pieces(x, square.y, [opponents_color + "R", opponents_color + "Q"]):
                     return False
 
             # diagonal line upper right
             for step in range(max(square.x, square.y), 7):
-                if get_piececode_given_square(square.x + step - max(square.x, square.y),
-                                              square.y+ step - max(square.x, square.y)) != get_opponents_color() + "B" \
-                    and get_piececode_given_square(square.x + step - max(square.x, square.y),
-                                              square.y+ step - max(square.x, square.y)) != get_opponents_color() + "Q":
-                    if get_piececode_given_square(square.x + step - max(square.x, square.y),
-                                              square.y+ step - max(square.x, square.y)) != "EMPTY":
-                        break
-                    else:
-                        continue
-                else:
+                if contains_given_pieces(square.x + step - max(square.x, square.y),
+                                         square.y + step - max(square.x, square.y),
+                                         [opponents_color + "B", opponents_color + "Q"]):
                     return False
 
             # diagonal line lower right
             for step in range(0, 7 - min(7 - square.x, square.y)):
-                if get_piececode_given_square(square.x + step, square.y - step) != get_opponents_color() + "B" \
-                        and get_piececode_given_square(square.x + step, square.y - step) != get_opponents_color() + "Q":
-                    if get_piececode_given_square(square.x + step, square.y - step) != "EMPTY":
-                        break
-                    else:
-                        continue
-                else:
+                if contains_given_pieces(square.x + step, square.y - step,
+                                         [opponents_color + "B", opponents_color + "Q"]):
                     return False
 
             # diagonal line upper left
-            for step in range(0, min(square.x, 7- square.y)):
-                if get_piececode_given_square(square.x - step, square.y + step) != get_opponents_color() + "B" \
-                        and get_piececode_given_square(square.x - step, square.y + step) != get_opponents_color() + "Q":
-                    if get_piececode_given_square(square.x - step, square.y + step) != "EMPTY":
-                        break
-                    else:
-                        continue
-                else:
+            for step in range(0, min(square.x, 7 - square.y)):
+                if contains_given_pieces(square.x - step, square.y + step,
+                                         [opponents_color + "B", opponents_color + "Q"]):
                     return False
+
 
             # diagonal line lower left
             for step in range(0, min(square.x, 7 - square.y)):
-                if get_piececode_given_square(square.x - step, square.y - step) != get_opponents_color() + "B" \
-                        and get_piececode_given_square(square.x - step, square.y - step) != get_opponents_color() + "Q":
-                    if get_piececode_given_square(square.x - step, square.y - step) != "EMPTY":
-                        break
-                    else:
-                        continue
-                else:
+                if contains_given_pieces(square.x - step, square.y - step,
+                                         [opponents_color + "B", opponents_color + "Q"]):
                     return False
+
             # check for attacks of the horsies:
             # if everything is clear, return true:
             return True

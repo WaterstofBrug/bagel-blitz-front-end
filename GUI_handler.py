@@ -10,6 +10,7 @@ class GUI:
         self.labels = []
         self.images = []
         self.clocks = []
+        self.overlays = []
         self.game_state = game_state
         self.board = board
 
@@ -22,8 +23,11 @@ class GUI:
     def add_image(self, image):
         self.images.append(image)
 
-    def add_clocks(self, clock):
+    def add_clock(self, clock):
         self.clocks.append(clock)
+
+    def add_overlay(self, clock):
+        self.overlays.append(clock)
 
     def on_button(self, x, y):
         for button in self.buttons:
@@ -85,3 +89,6 @@ class GUI:
                 clock.un_pause()
             else:
                 clock.do_pause()
+
+    def is_game_paused(self):
+        return self.clocks[0].pause and self.clocks[1].pause

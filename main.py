@@ -52,8 +52,8 @@ def main():
                                   batch=button_batch, window=window, GUI=GUI_))
 
     # clock creation
-    GUI_.add_clocks(Clock(color=Color.WHITE, batch=clock_batch, padding_x=200, padding_y=150, window_x=WINDOW_X))
-    GUI_.add_clocks(Clock(color=Color.BLACK, batch=clock_batch, padding_x=200, padding_y=100, window_x=WINDOW_X))
+    GUI_.add_clock(Clock(color=Color.WHITE, batch=clock_batch, padding_x=200, padding_y=150, window_x=WINDOW_X))
+    GUI_.add_clock(Clock(color=Color.BLACK, batch=clock_batch, padding_x=200, padding_y=100, window_x=WINDOW_X))
     GUI_.clocks[1].do_pause()
 
     def update(dt):  # every frame update

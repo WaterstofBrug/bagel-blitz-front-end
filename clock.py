@@ -9,12 +9,7 @@ class Clock:
         self.time = time  # milliseconds
         self.pause = False
 
-        seconds = (self.time/1000) % 60
-        if seconds == 0:
-            seconds = "00"
-        else:
-            seconds = str(seconds)
-        self.label = pyglet.text.Label(text=str(floor(self.time/60_000)) + ":" + seconds,
+        self.label = pyglet.text.Label(text=self.refactor_time(),
                                        font_name='Arial',
                                        font_size=36,
                                        x=window_x - padding_x,
@@ -30,12 +25,7 @@ class Clock:
             #out of time message; evaluate if it is a draw or if someone won.
             pass
         else:
-            seconds = (self.time/1000) % 60
-            if seconds == 0:
-                seconds = "00"
-            else:
-                seconds = str(seconds)
-            self.label.text = str(floor(self.time / 60_000)) + ":" + seconds
+            self.label.text = self.refactor_time()
 
     def update_graphics(self, padding_x, padding_y, width):
         self.padding = [padding_x, padding_y]
@@ -48,5 +38,15 @@ class Clock:
     def un_pause(self):
         self.pause = False
 
+    def refactor_time(self):
+        seconds = (self.time / 1000) % 60
+        if seconds == 0:
+            seconds = "00"
+        else:
+            seconds = str(seconds)
+        return str(floor(self.time/60_000)) + ":" + seconds
+
+
     def reset(self):
         self.time = 60000
+        self.label.text = self.refactor_time()
