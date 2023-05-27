@@ -47,12 +47,12 @@ def main():
     GUI_ = GUI(game_state, board)
     GUI_.add_button(button=Button(width=60, height=60, anchor_x=Side.RIGHT, anchor_y=Side.TOP, padding_x=20,
                                   padding_y=20, window_width=window.width, window_height=window.height,
-                                  event="toggle_pause", color_hover=GUIColors.NORMAL_BUTTON.value, color_unhover=GUIColors.HOVERED_BUTTON.value,
+                                  event="toggle_pause", color_hover=GUIColors.HOVERED_BUTTON.value, color_unhover=GUIColors.NORMAL_BUTTON.value,
                                   batch=button_batch, window=window, GUI=GUI_, icon="images/pause-button.png"))
 
     GUI_.add_button(button=Button(width=60, height=60, anchor_x=Side.RIGHT, anchor_y=Side.TOP, padding_x=100,
                                   padding_y=20, window_width=window.width, window_height=window.height,
-                                  event="reset", color_hover=GUIColors.NORMAL_BUTTON.value, color_unhover=GUIColors.HOVERED_BUTTON.value,
+                                  event="reset", color_hover=GUIColors.HOVERED_BUTTON.value, color_unhover=GUIColors.NORMAL_BUTTON.value,
                                   batch=button_batch, window=window, GUI=GUI_, icon="images/reset-button.png"))
 
     # clock creation
@@ -76,7 +76,7 @@ def main():
             handle_empty_click(x, y, button, modifiers, board)
 
     @window.event
-    def on_key_press(symbol, modifiers):  # keyboard handler
+    def on_key_press(symbol, modifiers):  # keyboard handler TODO: pauze op spatie, restart op F5
         pass
 
     @window.event

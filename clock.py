@@ -10,7 +10,7 @@ class Clock:
         self.pause = False
 
         self.label = pyglet.text.Label(text=self.refactor_time(),
-                                       font_name='Arial',
+                                       font_name='Agency FB',
                                        font_size=36,
                                        x=window_x - padding_x,
                                        y=padding_y,
