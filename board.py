@@ -14,8 +14,9 @@ class Board:
         self.size = size
         self.padding = [padding_x, padding_y]
         self.batch = batch
+        self.pieces_batch = pieces_batch
         self.board_squares = self.create_squares(size, self.padding)
-        self.pieces = self.create_pieces(pieces,pieces_batch)
+        self.pieces = self.create_pieces(pieces, self.pieces_batch)
 
     def create_squares(self, size, padding):  # initializes all the UI squares of the board
         list_of_squares = []
@@ -86,3 +87,6 @@ class Board:
         for piece in self.pieces:
             if piece.code != game_state.get_piece_from_square(self.get_square(piece.x, piece.y)).code:
                 self.pieces.remove(piece)
+
+    def restart(self, game_sate):
+        self.pieces = self.create_pieces(game_sate.pieces, self.pieces_batch)

@@ -7,7 +7,7 @@ def handle_first_click(x, y, button, modifiers, board):  # handles a first click
     board.get_square(rel_x, rel_y).select()
 
 
-def handle_second_click(x, y, button, modifiers, board, game_state):  # handles a second click on the board
+def handle_second_click(x, y, button, modifiers, board, game_state, GUI):  # handles a second click on the board
     selected_square = board.get_selected_square()  # previously selected square
     rel_x, rel_y = board.get_rel_xy(x, y)
     clicked_square = board.get_square(rel_x, rel_y)  # newly selected square
@@ -20,6 +20,7 @@ def handle_second_click(x, y, button, modifiers, board, game_state):  # handles 
         piece.move_to(rel_x, rel_y, board)
         board.update_pieces(game_state)
         board.deselect()
+        GUI.update_clocks()
     else:  # selecting a new piece
         handle_first_click(x, y, button, modifiers, board)
 
@@ -28,31 +29,21 @@ def on_board(x, y, board):  # returns true iff the click was on the board
     return board.padding[0] < x < board.size + board.padding[0] and board.padding[1] < y < board.size + board.padding[1]
 
 
-def on_button(x, y, window_size, GUI_objects):  # returns true iff the click was on a button
-    for object_ in GUI_objects:
-        if object_.type == GUIObjects.BUTTON:
-            if object_.is_over_button(x, y, window_size):
-                return True
-    return False
-
-def get_button(x, y, window_size, GUI_objects):
-    for object_ in GUI_objects:
-        if object_.type == GUIObjects.BUTTON:
-            if object_.is_over_button(x, y, window_size):
-                return object_
+def on_button(x, y, GUI):  # returns true iff the click was on a button
+    return GUI.on_button(x, y)
 
 
-def handle_button(x, y, button, modifiers, window_size,  GUI_objects):  # handles a click if it was on a button
-    button = get_button(x, y, window_size, GUI_objects)
-    button.click()
+def handle_button(x, y, button, modifiers, GUI):  # handles a click if it was on a button
+    button = GUI.get_button(x, y)
+    button.on_click()
 
 
 def handle_empty_click(x, y, button, modifiers, board):  # handles a click on nothing
     board.deselect()
 
 
-def handle_cursor_type(x, y, board, window, GUI_objects):  # changes the cursor type depending on the location
-    if on_board(x, y, board) or on_button(x, y, (window.width, window.height), GUI_objects):
+def handle_cursor_type(x, y, board, window, GUI):  # changes the cursor type depending on the location
+    if on_board(x, y, board) or on_button(x, y, GUI):
         cursor = window.get_system_mouse_cursor(window.CURSOR_HAND)
         window.set_mouse_cursor(cursor)
     else:
@@ -60,11 +51,9 @@ def handle_cursor_type(x, y, board, window, GUI_objects):  # changes the cursor 
         window.set_mouse_cursor(cursor)
 
 
-def handle_button_hover(x, y, window_size, GUI_objects):  # changes the color of the button when going over it with the cursor
-    if on_button(x, y, window_size, GUI_objects):
-        button = get_button(x, y, window_size, GUI_objects)
-        button.select_button()
+def handle_button_hover(x, y, GUI):  # changes the color of the button when going over it with the cursor
+    if on_button(x, y, GUI):
+        button = GUI.get_button(x, y)
+        button.hover()
     else:
-        for object_ in GUI_objects:
-            if object_.type == GUIObjects.BUTTON:
-                object_.deselect_button()
+        GUI.unhover_all()

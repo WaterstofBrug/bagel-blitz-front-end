@@ -1,6 +1,6 @@
 from enum import Enum
 import pyglet
-from enumerators import Color, SquareState as State
+from enumerators import Color, SquareState as State, GUIColors
 
 """
 Square class stores and handles all the GUI of a square
@@ -22,17 +22,17 @@ class Square:
         self.state = State.SELECTED
 
         if self.color == Color.WHITE:
-            self.graphical_obj.color = Color.WHITE_SELECTED.value
+            self.graphical_obj.color = GUIColors.SELECTED_LIGHT_SQAURE.value
         else:
-            self.graphical_obj.color = Color.BLACK_SELECTED.value
+            self.graphical_obj.color = GUIColors.SELECTED_DARK_SQUARE.value
 
     def deselect(self):
         self.state = State.IDLE
 
         if self.color == Color.WHITE:
-            self.graphical_obj.color = Color.WHITE.value
+            self.graphical_obj.color = GUIColors.LIGHT_SQUARE.value
         else:
-            self.graphical_obj.color = Color.BLACK.value
+            self.graphical_obj.color = GUIColors.DARK_SQUARE.value
 
     def equals(self, other):
         return self.x == other.x and self.y == other.y

@@ -2,10 +2,8 @@ from enum import Enum
 
 
 class Color(Enum):
-    BLACK = (150, 75, 0)
-    WHITE = (245, 245, 245)
-    BLACK_SELECTED = (34, 139, 34)
-    WHITE_SELECTED = (144, 238, 144)
+    BLACK = (57, 62, 70)
+    WHITE = (240, 240, 240)
 
 
 class SquareState(Enum):
@@ -24,4 +22,16 @@ class Side(Enum):
 
 class GUIObjects(Enum):
     BUTTON = 0
+
+
+class GUIColors(Enum):
+    BACKGROUND = (0, 128, 128)
+    OVERLAY_BACKGROUND = (54, 57, 63)
+    LIGHT_SQUARE = (240, 240, 240)
+    SELECTED_LIGHT_SQAURE = (173, 216, 230)
+    DARK_SQUARE = (57, 62, 70)
+    SELECTED_DARK_SQUARE = (0, 128, 128)
+    NORMAL_BUTTON = (0, 102, 102)
+    HOVERED_BUTTON = (0, 76, 76)
+
 
