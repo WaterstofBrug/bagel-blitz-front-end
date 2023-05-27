@@ -78,4 +78,11 @@ class Board:
             piece.update_graphics(self.square_width(), self)
 
     def get_piece(self, square):  # returns the pieceGUI object of square
-        pass
+        for piece in self.pieces:
+            if piece.x == square.x and piece.y == square.y:
+                return piece
+
+    def update_pieces(self, game_state):
+        for piece in self.pieces:
+            if piece.code != game_state.get_piece_from_square(self.get_square(piece.x, piece.y)).code:
+                self.pieces.remove(piece)

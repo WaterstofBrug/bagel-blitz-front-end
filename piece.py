@@ -31,15 +31,11 @@ class PieceGUI:
         return sprite
 
     def move_to(self, new_x, new_y, board):  # moves the sprite to a new location
-        board.get_square(self.x, self.y).empty()
-
         self.x = new_x
         self.y = new_y
 
         self.sprite.x = board.get_abs_x(new_x)
         self.sprite.y = board.get_abs_y(new_y)
-
-        board.get_square(self.x, self.y).set_piece(self)
 
     def update_graphics(self, new_size, board):
         self.size = new_size

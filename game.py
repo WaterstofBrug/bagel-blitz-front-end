@@ -15,6 +15,13 @@ class Game:
 
     def add_pieces(self):
         self.pieces.append(PieceLogic("WK", 2, 7))
+        self.pieces.append(PieceLogic("BN", 3, 6))
+
+    def get_piece_from_square(self, square):  # returns the piece at the square given
+        for piece in self.pieces:
+            if piece.x == square.x and piece.y == square.y:
+                return piece
+        return None
 
     def square_is_empty(self, selected_square):  # returns true iff there is no piece occupying the square
         for piecelogic in self.pieces:
@@ -43,7 +50,8 @@ class Game:
 
             # check if the moving piece is the king:
             if kingpiece.x == from_square.x and kingpiece.y == from_square.y:
-                raise Exception("not implemented yet")
+                # raise Exception(" TODO:not implemented yet ")
+                return False
 
             # checking for when the moving piece is not the king itself
             else:
@@ -126,46 +134,51 @@ class Game:
             if piecelogic.x == from_square.x and piecelogic.y == from_square.y:
                 piecetype = piecelogic.code[1:]
                 break
+
         match piecetype:
-            case "B":
+            case "B":  # bishop
                 if abs(to_square.x - from_square.x) == abs(to_square.y - from_square.y) and \
                         0 <= to_square.x <= 7 and 0 <= to_square.y <= 7 and not move_puts_king_in_check():
                     return True
                 return False
-            case "K":
-                # CASTLING STILL HAS TO BE IMPLEMENTED
+            case "K":  # king
+                # TODO: CASTLING STILL HAS TO BE IMPLEMENTED
                 if 0 <= to_square.x <= 7 and 0 <= to_square.y <= 7 and not move_puts_king_in_check() and \
                         abs(to_square.x - from_square.x) <= 1 and abs(to_square.y - from_square.y) <= 1:
                     return True
                 return False
-            case "N":
+            case "N":  # Knight
                 if 0 <= to_square.x <= 7 and 0 <= to_square.y <= 7 and \
                             ((abs(to_square.x - from_square.x) == 1 and abs(to_square.y - from_square.y) == 2) or
                              (abs(to_square.x - from_square.x) == 2 and abs(to_square.y - from_square.y) == 1)):
                     return True
                 return False
-            case "P":
+            case "P":  # Pawn
                 # EN PASSENT STILL HAS TO BE IMPLEMENTED
                 if 0 <= to_square.x <= 7 and 0 <= to_square.y <= 7 and not move_puts_king_in_check() \
                         and abs(to_square.y - from_square.y) == 1 and not move_puts_king_in_check():
                     return True
                 return False
-            case "Q":
+            case "Q":  # Queen
                 if 0 <= to_square.x <= 7 and 0 <= to_square.y <= 7 and not move_puts_king_in_check() and not move_puts_king_in_check():
                     return True
                 return False
-            case "R":
+            case "R":  # Rook
                 if 0 <= to_square.x <= 7 and 0 <= to_square.y <= 7 and (to_square.y == from_square.y ^ to_square.x == from_square.x) \
                         and not move_puts_king_in_check():
                     return True
                 return False
 
     def move(self, from_square, to_square):  # moves a piece from from_square to to_square
-        # CANT MOVE THE KING YET, WE HAVE TO ADD A FUNCTION THAT CALLS MOVE WHENEVER A PLAYER TRIES TO MOVE A PIECE.
         if not self.is_valid_move(from_square, to_square):
             raise Exception("you requested an invalid move")
+        if not self.square_is_empty(to_square):
+            self.take_on(to_square)
         for piece in self.pieces:
             if piece.x == from_square.x and piece.y == from_square.y:
                 piece.x, piece.y = to_square.x, to_square.y
                 break
 
+    def take_on(self, square):
+        piece = self.get_piece_from_square(square)
+        self.pieces.remove(piece)

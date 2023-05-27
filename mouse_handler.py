@@ -14,12 +14,11 @@ def handle_second_click(x, y, button, modifiers, board, game_state):  # handles 
 
     if selected_square.equals(clicked_square):  # clicked on the same square
         pass
-    elif game_state.square_is_empty(selected_square):  # clicked on an empty square
-        handle_first_click(x, y, button, modifiers, board)
-    elif game_state.is_valid_move(clicked_square, selected_square):  # allowed to move
-        game_state.move(clicked_square, selected_square)
+    elif not game_state.square_is_empty(selected_square) and game_state.is_valid_move(selected_square, clicked_square):  # allowed to move
+        game_state.move(selected_square, clicked_square)
         piece = board.get_piece(selected_square)
-        piece.move_to(rel_x, rel_y)
+        piece.move_to(rel_x, rel_y, board)
+        board.update_pieces(game_state)
         board.deselect()
     else:  # selecting a new piece
         handle_first_click(x, y, button, modifiers, board)
