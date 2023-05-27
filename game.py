@@ -14,13 +14,14 @@ class Game:
         self.history = history
 
     def add_pieces(self):
-        self.pieces.append(PieceLogic("WK", 2, 7))
-        self.pieces.append(PieceLogic("BK", 6, 2))
-        self.pieces.append(PieceLogic("BN", 3, 6))
-        self.pieces.append(PieceLogic("WP", 6, 1))
-        self.pieces.append(PieceLogic("BQ", 4, 2))
-        self.pieces.append(PieceLogic("BB", 0, 7))
-        self.pieces.append(PieceLogic("WR", 3, 4))
+        pawns = [PieceLogic("WP", i, 1) for i in range(0, 8)] + [PieceLogic("BP", i, 6) for i in range(0, 8)]
+        bischops = [PieceLogic("WB", 2, 0), PieceLogic("WB", 5, 0), PieceLogic("BB", 2, 7), PieceLogic("BB", 5, 7)]
+        rooks = [PieceLogic("WR", 0, 0), PieceLogic("WR", 7, 0), PieceLogic("BR", 0, 7), PieceLogic("BR", 7, 7)]
+        knights = [PieceLogic("WN", 1, 0), PieceLogic("WN", 6, 0), PieceLogic("BN", 1, 7), PieceLogic("BN", 6, 7)]
+        kings = [PieceLogic("WK", 3, 0), PieceLogic("BK", 3, 7)]
+        queens = [PieceLogic("WQ", 4, 0), PieceLogic("BQ", 4, 7)]
+
+        self.pieces = pawns + bischops + rooks + knights + kings + queens
 
     def restart(self):
         self.history = []

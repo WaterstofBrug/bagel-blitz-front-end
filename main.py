@@ -7,6 +7,11 @@ from enumerators import Color, Side, GUIColors
 from button import Button
 from GUI_handler import GUI
 
+"""
+tributes to picture sources:
+pause-icon: https://www.flaticon.com/free-icon/button_7375961?term=pause&page=1&position=44&origin=search&related_id=7375961
+reset-icon: https://www.flaticon.com/free-icon/reset_2618245?term=reset&page=1&position=1&origin=search&related_id=2618245
+"""
 
 def main():
     # window parameters
@@ -38,18 +43,17 @@ def main():
 
     # shape creation
     BG = pyglet.shapes.Rectangle(0, 0, WINDOW_X, WINDOW_Y, GUIColors.BACKGROUND.value, batch=background)
-    to_move = pyglet.shapes.Rectangle(0, 0, 50, 50, game_state.color_to_move.value, batch=background)
 
     GUI_ = GUI(game_state, board)
     GUI_.add_button(button=Button(width=60, height=60, anchor_x=Side.RIGHT, anchor_y=Side.TOP, padding_x=20,
                                   padding_y=20, window_width=window.width, window_height=window.height,
                                   event="toggle_pause", color_hover=GUIColors.NORMAL_BUTTON.value, color_unhover=GUIColors.HOVERED_BUTTON.value,
-                                  batch=button_batch, window=window, GUI=GUI_))
+                                  batch=button_batch, window=window, GUI=GUI_, icon="images/pause-button.png"))
 
     GUI_.add_button(button=Button(width=60, height=60, anchor_x=Side.RIGHT, anchor_y=Side.TOP, padding_x=100,
                                   padding_y=20, window_width=window.width, window_height=window.height,
                                   event="reset", color_hover=GUIColors.NORMAL_BUTTON.value, color_unhover=GUIColors.HOVERED_BUTTON.value,
-                                  batch=button_batch, window=window, GUI=GUI_))
+                                  batch=button_batch, window=window, GUI=GUI_, icon="images/reset-button.png"))
 
     # clock creation
     GUI_.add_clock(Clock(color=Color.WHITE, batch=clock_batch, padding_x=200, padding_y=150, window_x=WINDOW_X))
@@ -64,7 +68,6 @@ def main():
         if on_board(x, y, board):  # clicked on the board
             if board.is_selected():
                 handle_second_click(x, y, button, modifiers, board, game_state, GUI_)
-                to_move.color = game_state.color_to_move.value
             else:
                 handle_first_click(x, y, button, modifiers, board)
         elif on_button(x, y, GUI_):  # clicked on a button

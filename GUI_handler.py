@@ -1,3 +1,4 @@
+import pyglet
 
 """
 This class handles all the GUI elements appart from the board
@@ -72,11 +73,12 @@ class GUI:
                     self.clocks[1].do_pause()
 
             case "reset":
-                raise Exception("reset is not implemented yet")
                 self.game_state.restart()
                 self.board.restart(self.game_state)
-                for clock in self.clocks:
-                    clock.reset()
+                self.clocks[0].reset()
+                self.clocks[0].un_pause()
+                self.clocks[1].reset()
+                self.clocks[1].do_pause()
 
     def subtract_from_clocks(self, miliseconds):
         for clock in self.clocks:

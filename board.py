@@ -89,4 +89,8 @@ class Board:
                 self.pieces.remove(piece)
 
     def restart(self, game_sate):
+        for piece in self.pieces:
+            piece.sprite.delete()
+            self.pieces.remove(piece)
+
         self.pieces = self.create_pieces(game_sate.pieces, self.pieces_batch)

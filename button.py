@@ -10,7 +10,7 @@ This file handles all button related GUI aspects
 
 class Button:
     def __init__(self, width, height, anchor_x, anchor_y, padding_x, padding_y, window_width, window_height, event,
-                 color_hover, color_unhover, batch, window, GUI):
+                 color_hover, color_unhover, batch, window, GUI, icon=""):
         self.width = width
         self.height = height
         self.anchor_x = anchor_x
@@ -26,8 +26,25 @@ class Button:
         self.window = window
         self.GUI = GUI
 
+        self.graphical_icon = None
+        self.icon_width = 1
+        self.icon_height = 1
         self.graphical_obj = pyglet.shapes.Rectangle(self.get_abs_x(), self.get_abs_y(), self.width, self.height,
                                                      self.color_unhover, self.batch)
+
+        if icon != "":
+            self.graphical_icon = self.load(icon)
+
+    def load(self, icon):
+        image = pyglet.image.load(icon)
+        sprite = pyglet.sprite.Sprite(image, batch=self.batch)
+        self.icon_width = sprite.width
+        self.icon_height = sprite.height
+        sprite.scale_x = self.width / self.icon_width
+        sprite.scale_y = self.height / self.icon_height
+        sprite.x = self.get_abs_x()
+        sprite.y = self.get_abs_y()
+        return sprite
 
     def mouse_on_button(self, x, y):
         return 0 <= x - self.get_abs_x() <= self.width and 0 <= y - self.get_abs_y() <= self.height
@@ -80,3 +97,9 @@ class Button:
         self.graphical_obj.y = self.get_abs_y()
         self.graphical_obj.width = self.width
         self.graphical_obj.height = self.height
+
+        if self.graphical_icon is not None:
+            self.graphical_icon.scale_x = self.width / self.icon_width
+            self.graphical_icon.scale_y = self.height / self.icon_height
+            self.graphical_icon.x = self.get_abs_x()
+            self.graphical_icon.y = self.get_abs_y()
