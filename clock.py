@@ -7,6 +7,7 @@ class Clock:
         self.padding = [padding_x, padding_y]
         self.color = color
         self.time = time  # milliseconds
+        self.pause = False
 
         seconds = (self.time/1000) % 60
         if seconds == 0:
@@ -18,7 +19,7 @@ class Clock:
                                        font_size=36,
                                        x=window_x - padding_x,
                                        y=padding_y,
-                                       batch=batch)
+                                       batch=batch, color=list(self.color.value) + [255])
 
     def get_time(self):
         return self.time
@@ -40,3 +41,9 @@ class Clock:
         self.padding = [padding_x, padding_y]
         self.label.x = width - padding_x
         self.label.y = padding_y
+
+    def do_pause(self):
+        self.pause = True
+
+    def un_pause(self):
+        self.pause = False
