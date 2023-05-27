@@ -15,7 +15,12 @@ class Game:
 
     def add_pieces(self):
         self.pieces.append(PieceLogic("WK", 2, 7))
+        self.pieces.append(PieceLogic("BK", 6, 2))
         self.pieces.append(PieceLogic("BN", 3, 6))
+        self.pieces.append(PieceLogic("WP", 6, 1))
+        self.pieces.append(PieceLogic("BQ", 4, 2))
+        self.pieces.append(PieceLogic("BB", 0, 7))
+        self.pieces.append(PieceLogic("WR", 3, 4))
 
     def get_piece_from_square(self, square):  # returns the piece at the square given
         for piece in self.pieces:
@@ -129,44 +134,45 @@ class Game:
                                 return True
                         return False
 
-        piecetype = ""
-        for piecelogic in self.pieces:
-            if piecelogic.x == from_square.x and piecelogic.y == from_square.y:
-                piecetype = piecelogic.code[1:]
-                break
+        def basic_move_restriction():  # enforces basic move restrictions as playing with right the right color and staying in the board
+            return 0 <= to_square.x <= 7 and 0 <= to_square.y <= 7 and not move_puts_king_in_check() \
+                and self.color_to_move == piece.get_color()
+
+        piece = self.get_piece_from_square(from_square)
+        piecetype = piece.code[1:]
 
         match piecetype:
             case "B":  # bishop
-                if abs(to_square.x - from_square.x) == abs(to_square.y - from_square.y) and \
-                        0 <= to_square.x <= 7 and 0 <= to_square.y <= 7 and not move_puts_king_in_check():
-                    return True
+                if abs(to_square.x - from_square.x) == abs(to_square.y - from_square.y):
+                    return basic_move_restriction()
                 return False
             case "K":  # king
                 # TODO: CASTLING STILL HAS TO BE IMPLEMENTED
-                if 0 <= to_square.x <= 7 and 0 <= to_square.y <= 7 and not move_puts_king_in_check() and \
-                        abs(to_square.x - from_square.x) <= 1 and abs(to_square.y - from_square.y) <= 1:
-                    return True
+                if abs(to_square.x - from_square.x) <= 1 and abs(to_square.y - from_square.y) <= 1:
+                    return basic_move_restriction()
                 return False
             case "N":  # Knight
-                if 0 <= to_square.x <= 7 and 0 <= to_square.y <= 7 and \
-                            ((abs(to_square.x - from_square.x) == 1 and abs(to_square.y - from_square.y) == 2) or
-                             (abs(to_square.x - from_square.x) == 2 and abs(to_square.y - from_square.y) == 1)):
-                    return True
+                if (abs(to_square.x - from_square.x) == 1 and abs(to_square.y - from_square.y) == 2) or \
+                        (abs(to_square.x - from_square.x) == 2 and abs(to_square.y - from_square.y) == 1):
+                    return basic_move_restriction()
                 return False
             case "P":  # Pawn
-                # EN PASSENT STILL HAS TO BE IMPLEMENTED
-                if 0 <= to_square.x <= 7 and 0 <= to_square.y <= 7 and not move_puts_king_in_check() \
-                        and abs(to_square.y - from_square.y) == 1 and not move_puts_king_in_check():
-                    return True
+                # TODO: EN PASSENT STILL HAS TO BE IMPLEMENTED
+                if piece.get_color() == Color.WHITE:
+                    if to_square.y - from_square.y == 1 or (to_square.y - from_square.y == 2 and from_square.y == 1):
+                        return basic_move_restriction()
+                else:
+                    if to_square.y - from_square.y == -1 or (to_square.y - from_square.y == -2 and from_square.y == 6):
+                        return basic_move_restriction()
                 return False
-            case "Q":  # Queen
-                if 0 <= to_square.x <= 7 and 0 <= to_square.y <= 7 and not move_puts_king_in_check() and not move_puts_king_in_check():
-                    return True
+            case "Q":  # TODO: Queen
+                if (to_square.y == from_square.y or to_square.x == from_square.x) or \
+                        abs(to_square.x - from_square.x) == abs(to_square.y - from_square.y):
+                    return basic_move_restriction()
                 return False
             case "R":  # Rook
-                if 0 <= to_square.x <= 7 and 0 <= to_square.y <= 7 and (to_square.y == from_square.y ^ to_square.x == from_square.x) \
-                        and not move_puts_king_in_check():
-                    return True
+                if to_square.y == from_square.y or to_square.x == from_square.x:
+                    return basic_move_restriction()
                 return False
 
     def move(self, from_square, to_square):  # moves a piece from from_square to to_square
@@ -178,6 +184,13 @@ class Game:
             if piece.x == from_square.x and piece.y == from_square.y:
                 piece.x, piece.y = to_square.x, to_square.y
                 break
+        self.swap_color_to_move()
+
+    def swap_color_to_move(self):  # swaps the color of the to move
+        if self.color_to_move == Color.WHITE:
+            self.color_to_move = Color.BLACK
+        else:
+            self.color_to_move = Color.WHITE
 
     def take_on(self, square):
         piece = self.get_piece_from_square(square)

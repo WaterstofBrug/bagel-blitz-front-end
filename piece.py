@@ -1,4 +1,5 @@
 import pyglet
+from enumerators import Color
 
 
 """
@@ -56,3 +57,9 @@ class PieceLogic:
         self.code = code
         self.x = x
         self.y = y
+
+    def get_color(self):
+        if self.code[0] == "W":
+            return Color.WHITE
+        else:
+            return Color.BLACK

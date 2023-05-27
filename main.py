@@ -31,6 +31,7 @@ def main():
 
     # shape creation
     BG = pyglet.shapes.Rectangle(0, 0, WINDOW_X, WINDOW_Y, (10, 100, 100), batch=background)
+    to_move = pyglet.shapes.Rectangle(0, 0, 50, 50, game_state.color_to_move.value, batch=background)
     GUI_Objects = [Button(anchor=(Side.RIGHT, Side.TOP), width=25, height=25, padding=(10, 10),
                           window_size=(WINDOW_X, WINDOW_Y), idle_color=(23, 56, 76), active_color=(34, 45, 56),
                           batch=button_batch, function="settings"),
@@ -54,6 +55,7 @@ def main():
         if on_board(x, y, board):  # clicked on the board
             if board.is_selected():
                 handle_second_click(x, y, button, modifiers, board, game_state)
+                to_move.color = game_state.color_to_move.value
             else:
                 handle_first_click(x, y, button, modifiers, board)
         elif on_button(x, y, (window.width, window.height), GUI_Objects):  # clicked on a button
