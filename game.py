@@ -45,7 +45,103 @@ class Game:
                     return piecelogic.code
             return "EMPTY"
 
+        def square_is_not_attacked(square): # returns true if the given square is not under attack, false otherwise
+            # vertical line above given square
+            for y in range(square.y, 7):
+                if get_piececode_given_square(square.x, y) != get_opponents_color() + "R" and \
+                        get_piececode_given_square(square.x, y) != get_opponents_color() + "Q":
+                    if get_piececode_given_square(square.x, y) != "EMPTY":
+                        break
+                    else:
+                        continue
+                else:
+                    return False
+
+            # vertical line under given square
+            for y in range(square.y, 0, -1):
+                if get_piececode_given_square(square.x, y) != get_opponents_color() + "R" and \
+                        get_piececode_given_square(square.x, y) != get_opponents_color() + "Q":
+                    if get_piececode_given_square(square.x, y) != "EMPTY":
+                        break
+                    else:
+                        continue
+                else:
+                    return False
+
+            # horizontal line to the right of the given square
+            for x in range(square.x, 7):
+                if get_piececode_given_square(x, square.y) != get_opponents_color() + "R" and \
+                        get_piececode_given_square(x, square.y) != get_opponents_color() + "Q":
+                    if get_piececode_given_square(x, square.y) != "EMPTY":
+                        break
+                    else:
+                        continue
+                else:
+                    return False
+
+            # horizontal line to the left of the given square
+            for x in range(square.x, 0, -1):
+                if get_piececode_given_square(x, square.y) != get_opponents_color() + "R" and \
+                        get_piececode_given_square(x, square.y) != get_opponents_color() + "Q":
+                    if get_piececode_given_square(x, square.y) != "EMPTY":
+                        break
+                    else:
+                        continue
+                else:
+                    return False
+
+            # diagonal line upper right
+            for step in range(max(square.x, square.y), 7):
+                if get_piececode_given_square(square.x + step - max(square.x, square.y),
+                                              square.y+ step - max(square.x, square.y)) != get_opponents_color() + "B" \
+                    and get_piececode_given_square(square.x + step - max(square.x, square.y),
+                                              square.y+ step - max(square.x, square.y)) != get_opponents_color() + "Q":
+                    if get_piececode_given_square(square.x + step - max(square.x, square.y),
+                                              square.y+ step - max(square.x, square.y)) != "EMPTY":
+                        break
+                    else:
+                        continue
+                else:
+                    return False
+
+            # diagonal line lower right
+            for step in range(0, 7 - min(7 - square.x, square.y)):
+                if get_piececode_given_square(square.x + step, square.y - step) != get_opponents_color() + "B" \
+                        and get_piececode_given_square(square.x + step, square.y - step) != get_opponents_color() + "Q":
+                    if get_piececode_given_square(square.x + step, square.y - step) != "EMPTY":
+                        break
+                    else:
+                        continue
+                else:
+                    return False
+
+            # diagonal line upper left
+            for step in range(0, min(square.x, 7- square.y)):
+                if get_piececode_given_square(square.x - step, square.y + step) != get_opponents_color() + "B" \
+                        and get_piececode_given_square(square.x - step, square.y + step) != get_opponents_color() + "Q":
+                    if get_piececode_given_square(square.x - step, square.y + step) != "EMPTY":
+                        break
+                    else:
+                        continue
+                else:
+                    return False
+
+            # diagonal line lower left
+            for step in range(0, min(square.x, 7 - square.y)):
+                if get_piececode_given_square(square.x - step, square.y - step) != get_opponents_color() + "B" \
+                        and get_piececode_given_square(square.x - step, square.y - step) != get_opponents_color() + "Q":
+                    if get_piececode_given_square(square.x - step, square.y - step) != "EMPTY":
+                        break
+                    else:
+                        continue
+                else:
+                    return False
+            # check for attacks of the horsies:
+            # if everything is clear, return true:
+            return True
+
         def move_puts_king_in_check():  # returns true if the given move indeed puts the king in check.
+                                        # STILL NEED TO CHECK FOR MOVING THORUGH PIECES.
             king_code = "WK" if self.color_to_move == Color.WHITE else "BK"
             kingpiece = self.pieces[0]
             for piecelogic in self.pieces:
@@ -55,84 +151,94 @@ class Game:
 
             # check if the moving piece is the king:
             if kingpiece.x == from_square.x and kingpiece.y == from_square.y:
-                # raise Exception(" TODO:not implemented yet ")
-                return False
+                return not square_is_not_attacked(to_square)
 
             # checking for when the moving piece is not the king itself
             else:
                 # cases where the moving piece and the king are aligned row wise or column wise.
                 if from_square.x == kingpiece.x:
-                    # checking when the moving piece is above the king.
-                    if from_square.y > kingpiece.y:
-                        for y in range(from_square.y, 7):
-                            if get_piececode_given_square(from_square.x, y) == get_opponents_color() + "R" or \
-                                    get_piececode_given_square(from_square.x, y) == get_opponents_color() + "Q":
-                                return True
+                    # if the piece remains in the same x it should be fine:
+                    if to_square.x == from_square.x:
                         return False
                     else:
-                        for y in range(0, from_square.y):
-                            if get_piececode_given_square(from_square.x, y) == get_opponents_color() + "R" or \
-                                    get_piececode_given_square(from_square.x, y) == get_opponents_color() + "Q":
-                                return True
-                        return False
+                        # checking when the moving piece is above the king.
+                        if from_square.y > kingpiece.y:
+                            for y in range(from_square.y, 7):
+                                if get_piececode_given_square(from_square.x, y) == get_opponents_color() + "R" or \
+                                        get_piececode_given_square(from_square.x, y) == get_opponents_color() + "Q":
+                                    return True
+                            return False
+                        else:
+                            for y in range(0, from_square.y):
+                                if get_piececode_given_square(from_square.x, y) == get_opponents_color() + "R" or \
+                                        get_piececode_given_square(from_square.x, y) == get_opponents_color() + "Q":
+                                    return True
+                            return False
                 elif from_square.y == kingpiece.y:
-                    # checking when the moving piece is below the king.
-                    if from_square.x > kingpiece.x:
-                        for x in range(from_square.x, 7):
-                            if get_piececode_given_square(x, from_square.y) == get_opponents_color() + "R" or \
-                                    get_piececode_given_square(x, from_square.y) == get_opponents_color() + "Q":
-                                return True
+                    # if piece remains in the same y it should be fine:
+                    if to_square.y == from_square.y:
                         return False
                     else:
-                        for x in range(0, from_square.x):
-                            if get_piececode_given_square(x, from_square.y) == get_opponents_color() + "R" or \
-                                    get_piececode_given_square(x, from_square.y) == get_opponents_color() + "Q":
-                                return True
-                        return False
+                        # checking when the moving piece is below the king.
+                        if from_square.x > kingpiece.x:
+                            for x in range(from_square.x, 7):
+                                if get_piececode_given_square(x, from_square.y) == get_opponents_color() + "R" or \
+                                        get_piececode_given_square(x, from_square.y) == get_opponents_color() + "Q":
+                                    return True
+                            return False
+                        else:
+                            for x in range(0, from_square.x):
+                                if get_piececode_given_square(x, from_square.y) == get_opponents_color() + "R" or \
+                                        get_piececode_given_square(x, from_square.y) == get_opponents_color() + "Q":
+                                    return True
+                            return False
 
                 # case where the moving piece was aligned diagonally with the king.
                 if abs(from_square.x - kingpiece.x) == abs(from_square.y - kingpiece.y):
-                    # split into the four cases where the moving piece can be upper right, lower right, upper left, or lower left
-
-                    # moving piece is to the upper right of the king:
-                    if from_square.x > kingpiece.x and from_square.y > kingpiece.y:
-                        for x in range(from_square.x, 7):
-                            if from_square.y + x - from_square.x > 7:
-                                return False
-                            if get_piececode_given_square(x, from_square.y + x - from_square.x) == get_opponents_color() + "B" or \
-                                get_piececode_given_square(x, from_square.y + x - from_square.x) == get_opponents_color() + "Q":
-                                return True
+                    # if the piece remains in the same diagonal it should be fine
+                    if abs(from_square.x - kingpiece.x) == abs(to_square.x - from_square.x) == abs(to_square.y - from_square.y):
                         return False
-
-                    # moving piece is to the lower right of the king:
-                    if from_square.x > kingpiece.x and from_square.y < kingpiece.y:
-                        for x in range(from_square.x, 7):
-                            if from_square.y + x - from_square.x < 0:
-                                return False
-                            if get_piececode_given_square(x, from_square.y - (x - from_square.x)) == get_opponents_color() + "B" or \
-                                get_piececode_given_square(x, from_square.y - (x - from_square.x)) == get_opponents_color() + "Q":
-                                return True
-                        return False
-
-                    # moving piece is to the upper left of the king:
-                    if from_square.x < kingpiece.x and from_square.y > kingpiece.y:
-                        for y in range(from_square.y, 7):
-                            if from_square.x - (y - from_square.y) < 0:
-                                return False
-                            if get_piececode_given_square(from_square.x - (y - from_square.y), y) == get_opponents_color() + "B" or \
-                                get_piececode_given_square(from_square.x - (y - from_square.y), y) == get_opponents_color() + "Q":
-                                return True
-                        return False
-
-                    # moving piece is to the lower left of the king:
                     else:
-                        for y in range(from_square.y, 0, -1):
-                            if from_square.x - (from_square.y - y) < 0:
-                                return False
-                            if get_piececode_given_square(from_square.x - (from_square.y - y), y) == get_opponents_color() + "B" or \
-                                get_piececode_given_square(from_square.x - (from_square.y - y), y) == get_opponents_color() + "W":
-                                return True
-                        return False
+                        # split into the four cases where the moving piece can be upper right, lower right, upper left, or lower left
+                        # moving piece is to the upper right of the king:
+                        if from_square.x > kingpiece.x and from_square.y > kingpiece.y:
+                            for x in range(from_square.x, 7):
+                                if from_square.y + x - from_square.x > 7:
+                                    return False
+                                if get_piececode_given_square(x, from_square.y + x - from_square.x) == get_opponents_color() + "B" or \
+                                    get_piececode_given_square(x, from_square.y + x - from_square.x) == get_opponents_color() + "Q":
+                                    return True
+                            return False
+
+                        # moving piece is to the lower right of the king:
+                        if from_square.x > kingpiece.x and from_square.y < kingpiece.y:
+                            for x in range(from_square.x, 7):
+                                if from_square.y + x - from_square.x < 0:
+                                    return False
+                                if get_piececode_given_square(x, from_square.y - (x - from_square.x)) == get_opponents_color() + "B" or \
+                                    get_piececode_given_square(x, from_square.y - (x - from_square.x)) == get_opponents_color() + "Q":
+                                    return True
+                            return False
+
+                        # moving piece is to the upper left of the king:
+                        if from_square.x < kingpiece.x and from_square.y > kingpiece.y:
+                            for y in range(from_square.y, 7):
+                                if from_square.x - (y - from_square.y) < 0:
+                                    return False
+                                if get_piececode_given_square(from_square.x - (y - from_square.y), y) == get_opponents_color() + "B" or \
+                                    get_piececode_given_square(from_square.x - (y - from_square.y), y) == get_opponents_color() + "Q":
+                                    return True
+                            return False
+
+                        # moving piece is to the lower left of the king:
+                        else:
+                            for y in range(from_square.y, 0, -1):
+                                if from_square.x - (from_square.y - y) < 0:
+                                    return False
+                                if get_piececode_given_square(from_square.x - (from_square.y - y), y) == get_opponents_color() + "B" or \
+                                    get_piececode_given_square(from_square.x - (from_square.y - y), y) == get_opponents_color() + "W":
+                                    return True
+                            return False
 
         def basic_move_restriction():  # enforces basic move restrictions as playing with right the right color and staying in the board
             return 0 <= to_square.x <= 7 and 0 <= to_square.y <= 7 and not move_puts_king_in_check() \
