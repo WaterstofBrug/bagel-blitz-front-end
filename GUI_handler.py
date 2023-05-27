@@ -5,12 +5,13 @@ This class handles all the GUI elements appart from the board
 
 
 class GUI:
-    def __init__(self, game_state):
+    def __init__(self, game_state, board):
         self.buttons = []
         self.labels = []
         self.images = []
         self.clocks = []
         self.game_state = game_state
+        self.board = board
 
     def add_button(self, button):
         self.buttons.append(button)
@@ -66,8 +67,12 @@ class GUI:
                     self.clocks[0].do_pause()
                     self.clocks[1].do_pause()
 
-            case "toggle_settings":
-                print("settings")
+            case "reset":
+                raise Exception("reset is not implemented yet")
+                self.game_state.restart()
+                self.board.restart(self.game_state)
+                for clock in self.clocks:
+                    clock.reset()
 
     def subtract_from_clocks(self, miliseconds):
         for clock in self.clocks:

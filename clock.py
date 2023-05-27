@@ -47,3 +47,6 @@ class Clock:
 
     def un_pause(self):
         self.pause = False
+
+    def reset(self):
+        self.time = 60000

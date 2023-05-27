@@ -40,7 +40,7 @@ def main():
     BG = pyglet.shapes.Rectangle(0, 0, WINDOW_X, WINDOW_Y, GUIColors.BACKGROUND.value, batch=background)
     to_move = pyglet.shapes.Rectangle(0, 0, 50, 50, game_state.color_to_move.value, batch=background)
 
-    GUI_ = GUI(game_state)
+    GUI_ = GUI(game_state, board)
     GUI_.add_button(button=Button(width=60, height=60, anchor_x=Side.RIGHT, anchor_y=Side.TOP, padding_x=20,
                                   padding_y=20, window_width=window.width, window_height=window.height,
                                   event="toggle_pause", color_hover=GUIColors.NORMAL_BUTTON.value, color_unhover=GUIColors.HOVERED_BUTTON.value,
@@ -48,7 +48,7 @@ def main():
 
     GUI_.add_button(button=Button(width=60, height=60, anchor_x=Side.RIGHT, anchor_y=Side.TOP, padding_x=100,
                                   padding_y=20, window_width=window.width, window_height=window.height,
-                                  event="toggle_settings", color_hover=GUIColors.NORMAL_BUTTON.value, color_unhover=GUIColors.HOVERED_BUTTON.value,
+                                  event="reset", color_hover=GUIColors.NORMAL_BUTTON.value, color_unhover=GUIColors.HOVERED_BUTTON.value,
                                   batch=button_batch, window=window, GUI=GUI_))
 
     # clock creation

@@ -22,6 +22,11 @@ class Game:
         self.pieces.append(PieceLogic("BB", 0, 7))
         self.pieces.append(PieceLogic("WR", 3, 4))
 
+    def restart(self):
+        self.history = []
+        self.add_pieces()
+        self.color_to_move = Color.WHITE
+
     def get_piece_from_square(self, square):  # returns the piece at the square given
         for piece in self.pieces:
             if piece.x == square.x and piece.y == square.y:
