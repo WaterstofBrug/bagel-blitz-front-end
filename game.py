@@ -301,7 +301,7 @@ class Game:
 
         def basic_move_restriction():  # enforces basic move restrictions as playing the right color,
             # staying in the board, and making sure you are not in check.
-            return 0 <= to_square.x <= 7 and 0 <= to_square.y <= 7 and not move_puts_king_in_check() \
+            return is_valid_location(to_square.x, to_square.y) and not move_puts_king_in_check() \
                 and self.color_to_move == piece.get_color()
 
         piece = self.get_piece_from_square(from_square)
