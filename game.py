@@ -281,7 +281,8 @@ class Game:
                                     return True
                             return False
 
-        def king_is_in_check():
+        def king_is_in_check(): # TODO: use this function to determine legal moves. (if you are in check you must
+                                # make a move such that you get out of check.
             king_code = "WK" if self.color_to_move == Color.WHITE else "BK"
             kingpiece = self.pieces[0]
             for piecelogic in self.pieces:
@@ -291,12 +292,8 @@ class Game:
             return square_is_not_attacked(kingpiece.x, kingpiece.y)
         def basic_move_restriction():  # enforces basic move restrictions as playing the right color,
                                         # staying in the board, and making sure you are not in check.
-            # check if the king is in check to prevent illegal moves.
-            if not king_is_in_check():
-                return 0 <= to_square.x <= 7 and 0 <= to_square.y <= 7 and not move_puts_king_in_check() \
-                    and self.color_to_move == piece.get_color()
-            else: # if the king is in check, only allow moves so that the king gets out of check.
-                pass
+            return 0 <= to_square.x <= 7 and 0 <= to_square.y <= 7 and not move_puts_king_in_check() \
+                and self.color_to_move == piece.get_color()
 
         piece = self.get_piece_from_square(from_square)
         piecetype = piece.code[1:]
@@ -317,7 +314,7 @@ class Game:
                     return basic_move_restriction()
                 return False
             case "P":  # Pawn
-                # TODO: EN PASSENT STILL HAS TO BE IMPLEMENTED
+                # TODO: EN PASSANT STILL HAS TO BE IMPLEMENTED
                 def basic_pawn_move_check():
                     pawn_takes = abs(from_square.x - to_square.x) == 1 and not self.square_is_empty(to_square) and \
                                  get_piececode_given_square(to_square.x, to_square.y)[0] == get_opponents_color()
