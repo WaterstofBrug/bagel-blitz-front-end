@@ -181,7 +181,7 @@ class Game:
                 x = from_square.x
                 y = from_square.y
 
-                for step in range(0, abs(to_square.x - from_square.x)):
+                for step in range(0, abs(to_square.x - from_square.x) - 1):
                     x += step_x
                     y += step_y
                     if not self.square_is_empty(x, y):
