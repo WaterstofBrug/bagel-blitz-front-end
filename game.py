@@ -1,5 +1,6 @@
 from enumerators import Color
 from piece import PieceLogic
+from copy import copy
 
 """
 Game class stores and handles all the game state data.
@@ -63,15 +64,13 @@ class Game:
             return False
 
         def square_is_not_attacked(square_x, square_y):  # returns true if the given square is not under attack,
-                                                            # false otherwise
+            # false otherwise
             # vertical line above given square
             opponents_color = get_opponents_color()
             for y in range(square_y, 8):
                 if not contains_given_pieces(square_x, y, [opponents_color + "R", opponents_color + "Q"]):
                     if not contains_given_piece(square_x, y, "EMPTY"):
                         break
-                    else:
-                        continue
                 else:
                     return False
 
@@ -80,8 +79,6 @@ class Game:
                 if not contains_given_pieces(square_x, y, [opponents_color + "R", opponents_color + "Q"]):
                     if not contains_given_piece(square_x, y, "EMPTY"):
                         break
-                    else:
-                        continue
                 else:
                     return False
 
@@ -90,8 +87,6 @@ class Game:
                 if not contains_given_pieces(x, square_y, [opponents_color + "R", opponents_color + "Q"]):
                     if not contains_given_piece(x, square_y, "EMPTY"):
                         break
-                    else:
-                        continue
                 else:
                     return False
 
@@ -100,8 +95,6 @@ class Game:
                 if not contains_given_pieces(x, square_y, [opponents_color + "R", opponents_color + "Q"]):
                     if not contains_given_piece(x, square_y, "EMPTY"):
                         break
-                    else:
-                        continue
                 else:
                     return False
 
@@ -113,8 +106,6 @@ class Game:
                     if not contains_given_piece(square_x + step - max(square_x, square_y),
                                                 square_y + step - max(square_x, square_y), "EMPTY"):
                         break
-                    else:
-                        continue
                 else:
                     return False
 
@@ -124,8 +115,6 @@ class Game:
                                              [opponents_color + "B", opponents_color + "Q"]):
                     if not contains_given_piece(square_x + step, square_y - step, "EMPTY"):
                         break
-                    else:
-                        continue
                 else:
                     return False
 
@@ -135,8 +124,6 @@ class Game:
                                              [opponents_color + "B", opponents_color + "Q"]):
                     if not contains_given_piece(square_x - step, square_y + step, "EMPTY"):
                         break
-                    else:
-                        continue
                 else:
                     return False
 
@@ -146,34 +133,33 @@ class Game:
                                              [opponents_color + "B", opponents_color + "Q"]):
                     if not contains_given_piece(square_x - step, square_y - step, "EMPTY"):
                         break
-                    else:
-                        continue
                 else:
                     return False
 
             # check for attacks of the horsies:
-            if (is_valid_location(square_x + 2, square_y + 1) and   # possible location for horsie: +2, +1
+            if (is_valid_location(square_x + 2, square_y + 1) and  # possible location for horsie: +2, +1
                 get_piececode_given_square(square_x + 2, square_y + 1) == get_opponents_color() + "N") \
-                    or (is_valid_location(square_x - 2, square_y + 1) and   # -2, +1
+                    or (is_valid_location(square_x - 2, square_y + 1) and  # -2, +1
                         get_piececode_given_square(square_x - 2, square_y + 1) == get_opponents_color() + "N") \
-                    or (is_valid_location(square_x + 2, square_y - 1) and   # +2, -1
+                    or (is_valid_location(square_x + 2, square_y - 1) and  # +2, -1
                         get_piececode_given_square(square_x + 2, square_y - 1) == get_opponents_color() + "N") \
-                    or (is_valid_location(square_x - 2, square_y - 1) and   # -2, -1
+                    or (is_valid_location(square_x - 2, square_y - 1) and  # -2, -1
                         get_piececode_given_square(square_x - 2, square_y - 1) == get_opponents_color() + "N") \
-                    or (is_valid_location(square_x + 1, square_y + 2) and   # +1, +2
+                    or (is_valid_location(square_x + 1, square_y + 2) and  # +1, +2
                         get_piececode_given_square(square_x + 1, square_y + 2) == get_opponents_color() + "N") \
-                    or (is_valid_location(square_x + 1, square_y - 2) and   # +1, -2
+                    or (is_valid_location(square_x + 1, square_y - 2) and  # +1, -2
                         get_piececode_given_square(square_x + 1, square_y - 2) == get_opponents_color() + "N") \
-                    or (is_valid_location(square_x - 1, square_y + 2) and   # -1, +2
+                    or (is_valid_location(square_x - 1, square_y + 2) and  # -1, +2
                         get_piececode_given_square(square_x - 1, square_y + 2) == get_opponents_color() + "N") \
-                    or (is_valid_location(square_x - 1, square_y - 2) and   # -1, -2
+                    or (is_valid_location(square_x - 1, square_y - 2) and  # -1, -2
                         get_piececode_given_square(square_x - 1, square_y - 2) == get_opponents_color() + "N"):
                 return False
             # if everything is clear, return true:
             return True
 
+
         def move_puts_king_in_check():  # returns true if the given move indeed puts the king in check.
-            # STILL NEED TO CHECK FOR MOVING THORUGH PIECES.
+            # STILL NEED TO CHECK FOR MOVING THROUGH PIECES.
             king_code = "WK" if self.color_to_move == Color.WHITE else "BK"
             kingpiece = self.pieces[0]
             for piecelogic in self.pieces:
@@ -281,8 +267,8 @@ class Game:
                                     return True
                             return False
 
-        def king_is_in_check(): # TODO: use this function to determine legal moves. (if you are in check you must
-                                # make a move such that you get out of check.
+        def king_is_in_check():  # TODO: use this function to determine legal moves. (if you are in check you must
+            # make a move such that you get out of check.
             king_code = "WK" if self.color_to_move == Color.WHITE else "BK"
             kingpiece = self.pieces[0]
             for piecelogic in self.pieces:
@@ -290,8 +276,31 @@ class Game:
                     kingpiece = piecelogic
                     break
             return square_is_not_attacked(kingpiece.x, kingpiece.y)
+
+        """def after_move_king_in_check():  # returns true if the king will be in check
+            future_game = Game([])
+            for piece_ in self.pieces:
+                future_game.pieces.append(copy(piece_))
+            future_game.color_to_move = self.color_to_move
+
+            from_piece = self.get_piece_from_square(from_square)
+            index_from_piece = self.pieces.index(from_piece)
+            to_piece = self.get_piece_from_square(to_square)
+
+            if to_piece is not None:
+                index_to_piece = self.pieces.index(to_piece)
+                if index_to_piece < index_from_piece:
+                    index_from_piece -= 1
+                future_game.pieces.pop(index_to_piece)
+
+            future_game.pieces[index_from_piece].x = to_square.x
+            future_game.pieces[index_from_piece].y = to_square.y
+
+            return king_is_in_check()"""
+
+
         def basic_move_restriction():  # enforces basic move restrictions as playing the right color,
-                                        # staying in the board, and making sure you are not in check.
+            # staying in the board, and making sure you are not in check.
             return 0 <= to_square.x <= 7 and 0 <= to_square.y <= 7 and not move_puts_king_in_check() \
                 and self.color_to_move == piece.get_color()
 

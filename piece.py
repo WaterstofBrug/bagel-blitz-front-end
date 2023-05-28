@@ -58,6 +58,9 @@ class PieceLogic:
         self.x = x
         self.y = y
 
+    def __repr__(self):
+        return f"{self.code}, {self.x}, {self.y}"
+
     def get_color(self):
         if self.code[0] == "W":
             return Color.WHITE
