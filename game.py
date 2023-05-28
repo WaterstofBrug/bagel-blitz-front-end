@@ -178,10 +178,14 @@ class Game:
                 step_x = int((to_square.x - from_square.x) / abs(to_square.x - from_square.x))
                 step_y = int((to_square.y - from_square.y) / abs(to_square.y - from_square.y))
 
-                for x in range(from_square.x + step_x, to_square.x, step_x):
-                    for y in range(from_square.y + step_y, to_square.y, step_y):
-                        if not self.square_is_empty(x, y):
-                            return True
+                x = from_square.x
+                y = from_square.y
+
+                for step in range(0, abs(to_square.x - from_square.x)):
+                    x += step_x
+                    y += step_y
+                    if not self.square_is_empty(x, y):
+                        return True
                 return False
             case "R":
                 if to_square.x - from_square.x == 0:  # horizontal movement
