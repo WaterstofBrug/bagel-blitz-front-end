@@ -287,9 +287,7 @@ class Game:
     def move(self, from_square, to_square):  # moves a piece from from_square to to_square
         """if not self.is_valid_move(from_square, to_square):
             raise Exception("you requested an invalid move")"""
-
         self.history.append(self.pieces)
-
         if not self.square_is_empty(to_square.x, to_square.y):
             self.take_on(to_square)
         for piece in self.pieces:
