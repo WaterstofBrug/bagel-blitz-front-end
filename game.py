@@ -43,6 +43,9 @@ class Game:
         def get_opponents_color():  # returns the first letter of the color of the team who is not to move.
             return "B" if self.color_to_move == Color.WHITE else "W"
 
+        def is_valid_location(x, y):
+            return 0 <= x <= 7 and 0 <= y <= 7
+
         def get_piececode_given_square(x, y):  # returns the piece code given the pieces location,
             # if no piece is at the location it returns "EMPTY"
             for piecelogic in self.pieces:
@@ -148,6 +151,23 @@ class Game:
                     return False
 
             # check for attacks of the horsies:
+            if (is_valid_location(square.x + 2, square.y + 1) and   # possible location for horsie: +2, +1
+                get_piececode_given_square(square.x + 2, square.y + 1) == get_opponents_color() + "N") \
+                    or (is_valid_location(square.x - 2, square.y + 1) and   # -2, +1
+                        get_piececode_given_square(square.x - 2, square.y + 1) == get_opponents_color() + "N") \
+                    or (is_valid_location(square.x + 2, square.y - 1) and   # +2, -1
+                        get_piececode_given_square(square.x + 2, square.y - 1) == get_opponents_color() + "N") \
+                    or (is_valid_location(square.x - 2, square.y - 1) and   # -2, -1
+                        get_piececode_given_square(square.x - 2, square.y - 1) == get_opponents_color() + "N") \
+                    or (is_valid_location(square.x + 1, square.y + 2) and   # +1, +2
+                        get_piececode_given_square(square.x + 1, square.y + 2) == get_opponents_color() + "N") \
+                    or (is_valid_location(square.x + 1, square.y - 2) and   # +1, -2
+                        get_piececode_given_square(square.x + 1, square.y - 2) == get_opponents_color() + "N") \
+                    or (is_valid_location(square.x - 1, square.y + 2) and   # -1, +2
+                        get_piececode_given_square(square.x - 1, square.y + 2) == get_opponents_color() + "N") \
+                    or (is_valid_location(square.x - 1, square.y - 2) and   # -1, -2
+                        get_piececode_given_square(square.x - 1, square.y - 2) == get_opponents_color() + "N"):
+                return False
             # if everything is clear, return true:
             return True
 
