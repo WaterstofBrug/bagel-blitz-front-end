@@ -62,12 +62,13 @@ class Game:
                     return True
             return False
 
-        def square_is_not_attacked(square):  # returns true if the given square is not under attack, false otherwise
+        def square_is_not_attacked(square_x, square_y):  # returns true if the given square is not under attack,
+                                                            # false otherwise
             # vertical line above given square
             opponents_color = get_opponents_color()
-            for y in range(square.y, 8):
-                if not contains_given_pieces(square.x, y, [opponents_color + "R", opponents_color + "Q"]):
-                    if not contains_given_piece(square.x, y, "EMPTY"):
+            for y in range(square_y, 8):
+                if not contains_given_pieces(square_x, y, [opponents_color + "R", opponents_color + "Q"]):
+                    if not contains_given_piece(square_x, y, "EMPTY"):
                         break
                     else:
                         continue
@@ -75,9 +76,9 @@ class Game:
                     return False
 
             # vertical line under given square
-            for y in range(square.y, -1, -1):
-                if not contains_given_pieces(square.x, y, [opponents_color + "R", opponents_color + "Q"]):
-                    if not contains_given_piece(square.x, y, "EMPTY"):
+            for y in range(square_y, -1, -1):
+                if not contains_given_pieces(square_x, y, [opponents_color + "R", opponents_color + "Q"]):
+                    if not contains_given_piece(square_x, y, "EMPTY"):
                         break
                     else:
                         continue
@@ -85,9 +86,9 @@ class Game:
                     return False
 
             # horizontal line to the right of the given square
-            for x in range(square.x, 8):
-                if not contains_given_pieces(x, square.y, [opponents_color + "R", opponents_color + "Q"]):
-                    if not contains_given_piece(x, square.y, "EMPTY"):
+            for x in range(square_x, 8):
+                if not contains_given_pieces(x, square_y, [opponents_color + "R", opponents_color + "Q"]):
+                    if not contains_given_piece(x, square_y, "EMPTY"):
                         break
                     else:
                         continue
@@ -95,9 +96,9 @@ class Game:
                     return False
 
             # horizontal line to the left of the given square
-            for x in range(square.x, -1, -1):
-                if not contains_given_pieces(x, square.y, [opponents_color + "R", opponents_color + "Q"]):
-                    if not contains_given_piece(x, square.y, "EMPTY"):
+            for x in range(square_x, -1, -1):
+                if not contains_given_pieces(x, square_y, [opponents_color + "R", opponents_color + "Q"]):
+                    if not contains_given_piece(x, square_y, "EMPTY"):
                         break
                     else:
                         continue
@@ -105,12 +106,12 @@ class Game:
                     return False
 
             # diagonal line upper right
-            for step in range(max(square.x, square.y), 8):
-                if not contains_given_pieces(square.x + step - max(square.x, square.y),
-                                             square.y + step - max(square.x, square.y),
+            for step in range(max(square_x, square_y), 8):
+                if not contains_given_pieces(square_x + step - max(square_x, square_y),
+                                             square_y + step - max(square_x, square_y),
                                              [opponents_color + "B", opponents_color + "Q"]):
-                    if not contains_given_piece(square.x + step - max(square.x, square.y),
-                                                square.y + step - max(square.x, square.y), "EMPTY"):
+                    if not contains_given_piece(square_x + step - max(square_x, square_y),
+                                                square_y + step - max(square_x, square_y), "EMPTY"):
                         break
                     else:
                         continue
@@ -118,10 +119,10 @@ class Game:
                     return False
 
             # diagonal line lower right
-            for step in range(0, min(7 - square.x, square.y) + 1):
-                if not contains_given_pieces(square.x + step, square.y - step,
+            for step in range(0, min(7 - square_x, square_y) + 1):
+                if not contains_given_pieces(square_x + step, square_y - step,
                                              [opponents_color + "B", opponents_color + "Q"]):
-                    if not contains_given_piece(square.x + step, square.y - step, "EMPTY"):
+                    if not contains_given_piece(square_x + step, square_y - step, "EMPTY"):
                         break
                     else:
                         continue
@@ -129,10 +130,10 @@ class Game:
                     return False
 
             # diagonal line upper left
-            for step in range(0, min(square.x, 7 - square.y) + 1):
-                if not contains_given_pieces(square.x - step, square.y + step,
+            for step in range(0, min(square_x, 7 - square_y) + 1):
+                if not contains_given_pieces(square_x - step, square_y + step,
                                              [opponents_color + "B", opponents_color + "Q"]):
-                    if not contains_given_piece(square.x - step, square.y + step, "EMPTY"):
+                    if not contains_given_piece(square_x - step, square_y + step, "EMPTY"):
                         break
                     else:
                         continue
@@ -140,10 +141,10 @@ class Game:
                     return False
 
             # diagonal line lower left
-            for step in range(0, min(square.x, square.y) + 1):
-                if not contains_given_pieces(square.x - step, square.y - step,
+            for step in range(0, min(square_x, square_y) + 1):
+                if not contains_given_pieces(square_x - step, square_y - step,
                                              [opponents_color + "B", opponents_color + "Q"]):
-                    if not contains_given_piece(square.x - step, square.y - step, "EMPTY"):
+                    if not contains_given_piece(square_x - step, square_y - step, "EMPTY"):
                         break
                     else:
                         continue
@@ -151,22 +152,22 @@ class Game:
                     return False
 
             # check for attacks of the horsies:
-            if (is_valid_location(square.x + 2, square.y + 1) and   # possible location for horsie: +2, +1
-                get_piececode_given_square(square.x + 2, square.y + 1) == get_opponents_color() + "N") \
-                    or (is_valid_location(square.x - 2, square.y + 1) and   # -2, +1
-                        get_piececode_given_square(square.x - 2, square.y + 1) == get_opponents_color() + "N") \
-                    or (is_valid_location(square.x + 2, square.y - 1) and   # +2, -1
-                        get_piececode_given_square(square.x + 2, square.y - 1) == get_opponents_color() + "N") \
-                    or (is_valid_location(square.x - 2, square.y - 1) and   # -2, -1
-                        get_piececode_given_square(square.x - 2, square.y - 1) == get_opponents_color() + "N") \
-                    or (is_valid_location(square.x + 1, square.y + 2) and   # +1, +2
-                        get_piececode_given_square(square.x + 1, square.y + 2) == get_opponents_color() + "N") \
-                    or (is_valid_location(square.x + 1, square.y - 2) and   # +1, -2
-                        get_piececode_given_square(square.x + 1, square.y - 2) == get_opponents_color() + "N") \
-                    or (is_valid_location(square.x - 1, square.y + 2) and   # -1, +2
-                        get_piececode_given_square(square.x - 1, square.y + 2) == get_opponents_color() + "N") \
-                    or (is_valid_location(square.x - 1, square.y - 2) and   # -1, -2
-                        get_piececode_given_square(square.x - 1, square.y - 2) == get_opponents_color() + "N"):
+            if (is_valid_location(square_x + 2, square_y + 1) and   # possible location for horsie: +2, +1
+                get_piececode_given_square(square_x + 2, square_y + 1) == get_opponents_color() + "N") \
+                    or (is_valid_location(square_x - 2, square_y + 1) and   # -2, +1
+                        get_piececode_given_square(square_x - 2, square_y + 1) == get_opponents_color() + "N") \
+                    or (is_valid_location(square_x + 2, square_y - 1) and   # +2, -1
+                        get_piececode_given_square(square_x + 2, square_y - 1) == get_opponents_color() + "N") \
+                    or (is_valid_location(square_x - 2, square_y - 1) and   # -2, -1
+                        get_piececode_given_square(square_x - 2, square_y - 1) == get_opponents_color() + "N") \
+                    or (is_valid_location(square_x + 1, square_y + 2) and   # +1, +2
+                        get_piececode_given_square(square_x + 1, square_y + 2) == get_opponents_color() + "N") \
+                    or (is_valid_location(square_x + 1, square_y - 2) and   # +1, -2
+                        get_piececode_given_square(square_x + 1, square_y - 2) == get_opponents_color() + "N") \
+                    or (is_valid_location(square_x - 1, square_y + 2) and   # -1, +2
+                        get_piececode_given_square(square_x - 1, square_y + 2) == get_opponents_color() + "N") \
+                    or (is_valid_location(square_x - 1, square_y - 2) and   # -1, -2
+                        get_piececode_given_square(square_x - 1, square_y - 2) == get_opponents_color() + "N"):
                 return False
             # if everything is clear, return true:
             return True
@@ -182,7 +183,7 @@ class Game:
 
             # check if the moving piece is the king:
             if kingpiece.x == from_square.x and kingpiece.y == from_square.y:
-                return not square_is_not_attacked(to_square)
+                return not square_is_not_attacked(to_square.x, to_square.y)
 
             # checking for when the moving piece is not the king itself
             else:
@@ -280,9 +281,22 @@ class Game:
                                     return True
                             return False
 
-        def basic_move_restriction():  # enforces basic move restrictions as playing with right the right color and staying in the board
-            return 0 <= to_square.x <= 7 and 0 <= to_square.y <= 7 and not move_puts_king_in_check() \
-                and self.color_to_move == piece.get_color()
+        def king_is_in_check():
+            king_code = "WK" if self.color_to_move == Color.WHITE else "BK"
+            kingpiece = self.pieces[0]
+            for piecelogic in self.pieces:
+                if piecelogic.code == king_code:
+                    kingpiece = piecelogic
+                    break
+            return square_is_not_attacked(kingpiece.x, kingpiece.y)
+        def basic_move_restriction():  # enforces basic move restrictions as playing the right color,
+                                        # staying in the board, and making sure you are not in check.
+            # check if the king is in check to prevent illegal moves.
+            if not king_is_in_check():
+                return 0 <= to_square.x <= 7 and 0 <= to_square.y <= 7 and not move_puts_king_in_check() \
+                    and self.color_to_move == piece.get_color()
+            else: # if the king is in check, only allow moves so that the king gets out of check.
+                pass
 
         piece = self.get_piece_from_square(from_square)
         piecetype = piece.code[1:]
