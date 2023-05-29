@@ -20,7 +20,7 @@ def handle_second_click(x, y, button, modifiers, board, game_state, GUI):  # han
             not game_state.get_piececode_given_square(rel_x, rel_y)[0] == game_state.get_players_color():  # allowed to move
         game_state.move(selected_square, clicked_square, board)
         piece = board.get_piece(selected_square)
-        piece.move_to(rel_x, rel_y, board)
+        piece.move_to(rel_x, rel_y)
         board.update_pieces(game_state)
         board.deselect()
         GUI.update_clocks()

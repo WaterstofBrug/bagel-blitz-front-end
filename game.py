@@ -340,7 +340,6 @@ class Game:
         if not ghost_move:
             self.swap_color_to_move()  # give move to other color
 
-
     def swap_color_to_move(self):  # swaps the color of the to move
         if self.color_to_move == Color.WHITE:
             self.color_to_move = Color.BLACK
@@ -350,3 +349,9 @@ class Game:
     def take_on(self, square):
         piece = self.get_piece_from_square(square)
         self.pieces.remove(piece)
+
+    def get_possible_moves(self, piece):  # returns a list of possible moves concerning piece type and pieces on the board
+        raise Exception("get_possible_moves is not implemented yet")
+
+    def has_possible_moves(self, piece):  # returns true iff a piece has a possible move
+        return len(self.get_possible_moves(piece)) > 0

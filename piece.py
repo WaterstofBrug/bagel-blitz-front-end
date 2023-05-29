@@ -15,35 +15,38 @@ class PieceGUI:
         self.size = size
         self.sprite_width = 0
         self.sprite_height = 0
-        self.sprite = self.load(batch, board)
+        self.batch = batch
+        self.board = board
+        self.sprite = self.load()
 
     def __repr__(self):
         return f'x: {self.x}, y: {self.y}, img:images/{self.code}.png'
 
-    def load(self, batch, board):  # loads the sprite into the window
+    def load(self):  # loads the sprite into the window
         image = pyglet.image.load(f"images/{self.code}.png")
-        sprite = pyglet.sprite.Sprite(image, batch=batch)
+        sprite = pyglet.sprite.Sprite(image, batch=self.batch)
         self.sprite_width = sprite.width
         self.sprite_height = sprite.height
         sprite.scale_x = self.size / self.sprite_width
         sprite.scale_y = self.size / self.sprite_height
-        sprite.x = board.get_abs_x(self.x)
-        sprite.y = board.get_abs_y(self.y)
+        sprite.x = self.board.get_abs_x(self.x)
+        sprite.y = self.board.get_abs_y(self.y)
         return sprite
 
-    def move_to(self, new_x, new_y, board):  # moves the sprite to a new location
+    def move_to(self, new_x, new_y):  # moves the sprite to a new location
         self.x = new_x
         self.y = new_y
 
-        self.sprite.x = board.get_abs_x(new_x)
-        self.sprite.y = board.get_abs_y(new_y)
+        self.sprite.x = self.board.get_abs_x(new_x)
+        self.sprite.y = self.board.get_abs_y(new_y)
 
-    def update_graphics(self, new_size, board):
+    def update_graphics(self, new_size):
         self.size = new_size
         self.sprite.scale_x = self.size / self.sprite_width
         self.sprite.scale_y = self.size / self.sprite_height
-        self.sprite.x = board.get_abs_x(self.x)
-        self.sprite.y = board.get_abs_y(self.y)
+        self.sprite.x = self.board.get_abs_x(self.x)
+        self.sprite.y = self.board.get_abs_y(self.y)
+
 
 
 

@@ -76,7 +76,7 @@ class Board:
         for square in self.board_squares:
             square.update_graphics(self.padding, self.square_width())
         for piece in self.pieces:
-            piece.update_graphics(self.square_width(), self)
+            piece.update_graphics(self.square_width())
 
     def get_piece(self, square):  # returns the pieceGUI object of square
         for piece in self.pieces:
