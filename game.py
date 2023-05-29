@@ -316,11 +316,11 @@ class Game:
             if to_square.x - from_square.x == -2:  # king-side
                 self.move(board.get_square(0, from_square.y), board.get_square(2, from_square.y), board, ghost_move=True)
                 pieceGUI = board.get_piece(board.get_square(0, from_square.y))
-                pieceGUI.move_to(2, from_square.y, board)
+                pieceGUI.move_to(2, from_square.y)
             else:  # queen-side
                 self.move(board.get_square(7, from_square.y), board.get_square(4, from_square.y), board, ghost_move=True)
                 pieceGUI = board.get_piece(board.get_square(7, from_square.y))
-                pieceGUI.move_to(4, from_square.y, board)
+                pieceGUI.move_to(4, from_square.y)
 
         # handle movement status of kings and rooks concerning castling
         if piece.code[1] == "K":
