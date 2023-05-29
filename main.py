@@ -7,11 +7,6 @@ from enumerators import Color, Side, GUIColors
 from button import Button
 from GUI_handler import GUI
 
-"""
-tributes to picture sources:
-pause-icon: https://www.flaticon.com/free-icon/button_7375961?term=pause&page=1&position=44&origin=search&related_id=7375961
-reset-icon: https://www.flaticon.com/free-icon/reset_2618245?term=reset&page=1&position=1&origin=search&related_id=2618245
-"""
 
 def main():
     # window parameters

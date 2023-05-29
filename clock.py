@@ -31,7 +31,7 @@ class Clock:
         self.padding = [padding_x, padding_y]
         self.label.x = width - padding_x
         self.label.y = padding_y
-        # self.label.font_size = int(padding_x * 0.18)
+        self.label.font_size = int(padding_x * 0.18)
 
     def do_pause(self):
         self.pause = True

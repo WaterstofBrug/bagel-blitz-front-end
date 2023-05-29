@@ -15,10 +15,10 @@ def handle_second_click(x, y, button, modifiers, board, game_state, GUI):  # han
     if selected_square.equals(clicked_square):  # clicked on the same square
         pass
     elif not game_state.square_is_empty(selected_square.x, selected_square.y) and \
-            game_state.is_valid_move(selected_square, clicked_square) and \
+            game_state.is_valid_move(selected_square, clicked_square, board) and \
             not GUI.is_game_paused() and \
             not game_state.get_piececode_given_square(rel_x, rel_y)[0] == game_state.get_players_color():  # allowed to move
-        game_state.move(selected_square, clicked_square)
+        game_state.move(selected_square, clicked_square, board)
         piece = board.get_piece(selected_square)
         piece.move_to(rel_x, rel_y, board)
         board.update_pieces(game_state)

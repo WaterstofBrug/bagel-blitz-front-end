@@ -12,6 +12,8 @@ class Game:
         self.color_to_move = Color.WHITE
         self.pieces = []
         self.history = history
+        self.pieces_moved = {"WK": False, "BK": False, "WR-King-Side": False, "WR-Queen-Side": False,
+                             "BR-King-Side": False, "BR-Queen-Side": False}
 
     def add_pieces(self):
         pawns = [PieceLogic("WP", i, 1) for i in range(0, 8)] + [PieceLogic("BP", i, 6) for i in range(0, 8)]
@@ -27,6 +29,8 @@ class Game:
         self.history = []
         self.add_pieces()
         self.color_to_move = Color.WHITE
+        for key in self.pieces_moved:
+            self.pieces_moved[key] = False
 
     def get_piece_from_square(self, square):  # returns the piece at the square given
         for piece in self.pieces:
@@ -209,32 +213,47 @@ class Game:
             case _:
                 return False
 
-    def is_valid_move(self, from_square, to_square):  # returns true iff the move requested is allowed
+    def after_move_king_in_check(self, from_square, to_square):  # returns true if the king will be in check
+        future_game = Game([])
+        for piece_ in self.pieces:
+            future_game.pieces.append(copy(piece_))
+        future_game.color_to_move = self.color_to_move
 
-        def after_move_king_in_check():  # returns true if the king will be in check
-            future_game = Game([])
-            for piece_ in self.pieces:
-                future_game.pieces.append(copy(piece_))
-            future_game.color_to_move = self.color_to_move
+        from_piece = self.get_piece_from_square(from_square)
+        index_from_piece = self.pieces.index(from_piece)
+        to_piece = self.get_piece_from_square(to_square)
 
-            from_piece = self.get_piece_from_square(from_square)
-            index_from_piece = self.pieces.index(from_piece)
-            to_piece = self.get_piece_from_square(to_square)
+        if to_piece is not None:
+            index_to_piece = self.pieces.index(to_piece)
+            if index_to_piece < index_from_piece:
+                index_from_piece -= 1
+            future_game.pieces.pop(index_to_piece)
 
-            if to_piece is not None:
-                index_to_piece = self.pieces.index(to_piece)
-                if index_to_piece < index_from_piece:
-                    index_from_piece -= 1
-                future_game.pieces.pop(index_to_piece)
+        future_game.pieces[index_from_piece].x = to_square.x
+        future_game.pieces[index_from_piece].y = to_square.y
 
-            future_game.pieces[index_from_piece].x = to_square.x
-            future_game.pieces[index_from_piece].y = to_square.y
+        return future_game.king_is_in_check()
 
-            return future_game.king_is_in_check()
+    def valid_castle(self, from_square, to_square, board):
+        players_color = self.get_players_color()
+        if not self.pieces_moved[players_color + "K"]:
+            if from_square.y == to_square.y:
+                if to_square.x - from_square.x == -2:  # king-side
+                    return not self.pieces_moved[players_color + "R-King-Side"] \
+                        and not self.passes_through_pieces("R", from_square, to_square) \
+                        and not self.after_move_king_in_check(from_square,
+                                                              board.get_square(from_square.x - 1, from_square.y))
+                elif to_square.x - from_square.x == 2:
+                    return not self.pieces_moved[players_color + "R-Queen-Side"] \
+                        and not self.passes_through_pieces("R", from_square, to_square) \
+                        and not self.after_move_king_in_check(from_square,
+                                                              board.get_square(from_square.x + 1, from_square.y))
+        return False
 
+    def is_valid_move(self, from_square, to_square, board):  # returns true iff the move requested is allowed
         def basic_move_restriction():  # enforces basic move restrictions as playing the right color,
             # staying in the board, and making sure you are not in check.
-            return self.is_valid_location(to_square.x, to_square.y) and not after_move_king_in_check() \
+            return self.is_valid_location(to_square.x, to_square.y) and not self.after_move_king_in_check(from_square, to_square) \
                 and self.color_to_move == piece.get_color()
 
         piece = self.get_piece_from_square(from_square)
@@ -246,8 +265,7 @@ class Game:
                     return basic_move_restriction() and not self.passes_through_pieces("B", from_square, to_square)
                 return False
             case "K":  # king
-                # TODO: CASTLING STILL HAS TO BE IMPLEMENTED
-                if abs(to_square.x - from_square.x) <= 1 and abs(to_square.y - from_square.y) <= 1:
+                if abs(to_square.x - from_square.x) <= 1 and abs(to_square.y - from_square.y) <= 1 or self.valid_castle(from_square, to_square, board):
                     return basic_move_restriction()
                 return False
             case "N":  # Knight
@@ -284,17 +302,44 @@ class Game:
                     return basic_move_restriction() and not self.passes_through_pieces("R", from_square, to_square)
                 return False
 
-    def move(self, from_square, to_square):  # moves a piece from from_square to to_square
-        """if not self.is_valid_move(from_square, to_square):
-            raise Exception("you requested an invalid move")"""
-        self.history.append(self.pieces)
-        if not self.square_is_empty(to_square.x, to_square.y):
+    def move(self, from_square, to_square, board, ghost_move=False):  # moves a piece from from_square to to_square
+        if not ghost_move:  # a ghost move means a move like moving the rook in a castle
+            self.history.append(self.pieces)  # update history with board before move
+
+        if not self.square_is_empty(to_square.x, to_square.y):  # taking a piece if it is in the new spot
             self.take_on(to_square)
-        for piece in self.pieces:
-            if piece.x == from_square.x and piece.y == from_square.y:
-                piece.x, piece.y = to_square.x, to_square.y
-                break
-        self.swap_color_to_move()
+
+        piece = self.get_piece_from_square(from_square)
+
+        if piece.code[1] == "K" and self.valid_castle(from_square, to_square, board):
+            players_color = self.get_players_color()
+            if to_square.x - from_square.x == -2:  # king-side
+                self.move(board.get_square(0, from_square.y), board.get_square(2, from_square.y), board, ghost_move=True)
+                pieceGUI = board.get_piece(board.get_square(0, from_square.y))
+                pieceGUI.move_to(2, from_square.y, board)
+            else:  # queen-side
+                self.move(board.get_square(7, from_square.y), board.get_square(4, from_square.y), board, ghost_move=True)
+                pieceGUI = board.get_piece(board.get_square(7, from_square.y))
+                pieceGUI.move_to(4, from_square.y, board)
+
+        # handle movement status of kings and rooks concerning castling
+        if piece.code[1] == "K":
+            self.pieces_moved[piece.code] = True
+        elif piece.code[1] == "WR":
+            if piece.x == 0 and piece.y == 0:
+                self.pieces_moved["WR-King-Side"] = True
+            elif piece.x == 7 and piece.y == 0:
+                self.pieces_moved["WR-Queen-Side"] = True
+        elif piece.code[1] == "BR":
+            if piece.x == 0 and piece.y == 7:
+                self.pieces_moved["BR-King-Side"] = True
+            elif piece.x == 7 and piece.y == 7:
+                self.pieces_moved["BR-Queen-Side"] = True
+
+        piece.x, piece.y = to_square.x, to_square.y  # move the piece
+        if not ghost_move:
+            self.swap_color_to_move()  # give move to other color
+
 
     def swap_color_to_move(self):  # swaps the color of the to move
         if self.color_to_move == Color.WHITE:
