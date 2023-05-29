@@ -87,8 +87,8 @@ class Button:
         self.window_height = new_window_height
         self.window_width = new_window_width
 
-        self.width *= ratio_change_x
-        self.height *= ratio_change_y
+        self.width *= (ratio_change_x + ratio_change_y) / 2
+        self.height *= (ratio_change_x + ratio_change_y) / 2
 
         self.padding_x *= ratio_change_x
         self.padding_y *= ratio_change_y

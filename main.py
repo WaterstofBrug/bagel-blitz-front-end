@@ -16,7 +16,7 @@ reset-icon: https://www.flaticon.com/free-icon/reset_2618245?term=reset&page=1&p
 def main():
     # window parameters
     WINDOW_X, WINDOW_Y = 600, 400
-    REFRESH_RATE = 1 / 100.0
+    REFRESH_RATE = 1/10
 
     # window initialization
     window = pyglet.window.Window(WINDOW_X, WINDOW_Y, resizable=True)
