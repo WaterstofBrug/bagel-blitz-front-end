@@ -94,3 +94,8 @@ class GUI:
 
     def is_game_paused(self):
         return self.clocks[0].pause and self.clocks[1].pause
+
+    def press_button(self, event):
+        for button in self.buttons:
+            if button.event == event:
+                button.on_click()

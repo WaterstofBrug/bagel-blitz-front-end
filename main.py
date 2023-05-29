@@ -77,7 +77,10 @@ def main():
 
     @window.event
     def on_key_press(symbol, modifiers):  # keyboard handler TODO: pauze op spatie, restart op F5
-        pass
+        if symbol == pyglet.window.key.SPACE:
+            GUI_.press_button("toggle_pause")
+        elif symbol == pyglet.window.key.F5 or symbol == pyglet.window.key.R:
+            GUI_.press_button("reset")
 
     @window.event
     def on_mouse_motion(x, y, dx, dy):  # mouse motion handler
