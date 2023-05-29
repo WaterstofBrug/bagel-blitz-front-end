@@ -44,7 +44,7 @@ class Clock:
         if seconds == 0:
             seconds = "00"
         else:
-            seconds = str(seconds)
+            seconds = str(round(seconds, 1))
         return str(floor(self.time/60_000)) + ":" + seconds
 
 

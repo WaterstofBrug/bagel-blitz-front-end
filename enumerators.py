@@ -35,3 +35,10 @@ class GUIColors(Enum):
     HOVERED_BUTTON = (103, 110, 166)
 
 
+class WinStates(Enum):
+    NONE = 0
+    WHITE_WIN = 1
+    BLACK_WIN = 2
+    PAT = 3
+    THREEMOVES = 4
+    FIFTYMOVES = 5

@@ -1,4 +1,4 @@
-from enumerators import Color
+from enumerators import Color, WinStates
 from piece import PieceLogic
 from copy import copy
 
@@ -14,6 +14,7 @@ class Game:
         self.history = history
         self.pieces_moved = {"WK": False, "BK": False, "WR-King-Side": False, "WR-Queen-Side": False,
                              "BR-King-Side": False, "BR-Queen-Side": False}
+        self.win_state = WinStates.NONE
 
     def add_pieces(self):
         pawns = [PieceLogic("WP", i, 1) for i in range(0, 8)] + [PieceLogic("BP", i, 6) for i in range(0, 8)]
@@ -31,6 +32,7 @@ class Game:
         self.color_to_move = Color.WHITE
         for key in self.pieces_moved:
             self.pieces_moved[key] = False
+        self.win_state = WinStates.NONE
 
     def get_piece_from_square(self, square):  # returns the piece at the square given
         for piece in self.pieces:
@@ -316,11 +318,11 @@ class Game:
             if to_square.x - from_square.x == -2:  # king-side
                 self.move(board.get_square(0, from_square.y), board.get_square(2, from_square.y), board, ghost_move=True)
                 pieceGUI = board.get_piece(board.get_square(0, from_square.y))
-                pieceGUI.move_to(2, from_square.y, board)
+                pieceGUI.move_to(2, from_square.y)
             else:  # queen-side
                 self.move(board.get_square(7, from_square.y), board.get_square(4, from_square.y), board, ghost_move=True)
                 pieceGUI = board.get_piece(board.get_square(7, from_square.y))
-                pieceGUI.move_to(4, from_square.y, board)
+                pieceGUI.move_to(4, from_square.y)
 
         # handle movement status of kings and rooks concerning castling
         if piece.code[1] == "K":

@@ -3,7 +3,7 @@ from board import Board
 from mouse_handler import *
 from clock import Clock
 from game import Game
-from enumerators import Color, Side, GUIColors
+from enumerators import Color, Side, GUIColors, WinStates
 from button import Button
 from GUI_handler import GUI
 
@@ -16,6 +16,8 @@ def main():
     # window initialization
     window = pyglet.window.Window(WINDOW_X, WINDOW_Y, resizable=True)
     window.set_caption("")
+    image = pyglet.image.load(f"images/bagel_icon.ico")
+    window.set_icon(image)
     window.set_minimum_size(WINDOW_X, WINDOW_Y)
 
     # batch initialization
@@ -58,6 +60,18 @@ def main():
     def update(dt):  # every frame update
         GUI_.subtract_from_clocks(REFRESH_RATE * 1000)
 
+        if game_state.win_state != WinStates.NONE:
+            if game_state.win_state == WinStates.WHITE_WIN:
+                print("White Wins!")
+            elif game_state.win_state == WinStates.WHITE_WIN:
+                print("Black Wins!")
+            elif game_state.win_state == WinStates.PAT:
+                print("PAT")
+            elif game_state.win_state == WinStates.THREEMOVES:
+                print("Remise by three moves rule")
+            elif game_state.win_state == WinStates.FIFTYMOVES:
+                print("Rimse by fifte moves rule")
+
     @window.event
     def on_mouse_press(x, y, button, modifiers):  # mouse handler
         if on_board(x, y, board):  # clicked on the board
@@ -76,6 +90,8 @@ def main():
             GUI_.press_button("toggle_pause")
         elif symbol == pyglet.window.key.F5 or symbol == pyglet.window.key.R:
             GUI_.press_button("reset")
+        elif symbol == pyglet.window.key.M:
+            game_state.win_state = WinStates.WHITE_WIN
 
     @window.event
     def on_mouse_motion(x, y, dx, dy):  # mouse motion handler
