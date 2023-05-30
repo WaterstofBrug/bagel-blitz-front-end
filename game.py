@@ -338,6 +338,11 @@ class Game:
             elif piece.x == 7 and piece.y == 7:
                 self.pieces_moved["BR-Queen-Side"] = True
 
+        if to_square.y in (0, 7) and piece.code[1] == "P":
+            guipiece = board.get_piece(board.get_square(from_square.x, from_square.y))
+            guipiece.code = guipiece.code[0] + "Q"
+            piece.code = piece.code[0] + "Q"
+            guipiece.sprite = guipiece.load()
         piece.x, piece.y = to_square.x, to_square.y  # move the piece
         if not ghost_move:
             self.swap_color_to_move()  # give move to other color
