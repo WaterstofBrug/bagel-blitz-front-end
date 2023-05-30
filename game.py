@@ -396,11 +396,11 @@ class Game:
                             and self.get_piececode_given_square(x, piece_y)[0] != piece_code[0]:
                         possible_moves.append(board.get_square(x, piece_y))
             case "B":
-                # diagonal line upper right
-                for step in range(1, max(piece_x, piece_y), 8):
-                    if self.is_valid_move(current_square, board.get_square(piece_x + step - max(piece_x, piece_y), piece_y + step - max(piece_x, piece_y)), board) \
-                            and self.get_piececode_given_square(piece_x + step - max(piece_x, piece_y), piece_y + step - max(piece_x, piece_y))[0] != piece_code[0]:
-                        possible_moves.append(board.get_square(piece_x + step - max(piece_x, piece_y), piece_y + step - max(piece_x, piece_y)))
+                # diagonal line upper right TODO; fix deze
+                for step in range(1, max(7 - piece_x, 7 - piece_y), 8):
+                    if self.is_valid_move(current_square, board.get_square(piece_x + step, piece_y + step), board) \
+                            and self.get_piececode_given_square(piece_x + step, piece_y + step)[0] != piece_code[0]:
+                        possible_moves.append(board.get_square(piece_x + step, piece_y + step))
 
                 # diagonal line lower right
                 for step in range(1, min(7 - piece_x, piece_y) + 1):
@@ -420,7 +420,8 @@ class Game:
                             and self.get_piececode_given_square(piece_x - step, piece_y - step)[0] != piece_code[0]:
                         possible_moves.append(board.get_square(piece_x - step, piece_y - step))
             case "Q":
-                possible_moves = self.get_possible_moves("XR", piece_x, piece_y, board) + self.get_possible_moves("XB", piece_x, piece_y, board)
+                possible_moves = self.get_possible_moves_raw_inputs("XR", piece_x, piece_y, board) \
+                                 + self.get_possible_moves_raw_inputs("XB", piece_x, piece_y, board)
             case "P":
                 if piece_code[0] == "W":
                     moves_to_check = [(0, 1), (0, 2), (-1, 1), (1, 1)]
