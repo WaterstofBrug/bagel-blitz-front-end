@@ -368,47 +368,56 @@ class Game:
             case "K":
                 for i in [-1, 0, 1]:
                     for j in [-1, 0, 1]:
-                        if not (i == 0 and j == 0) and self.is_valid_move(current_square, board.get_square(piece_x + i, piece_y + j), board) and self.get_piececode_given_square(piece_x + i, piece_y + j)[0] != piece_code[0]:
+                        if not (i == 0 and j == 0) and self.is_valid_move(current_square, board.get_square(piece_x + i, piece_y + j), board) \
+                                and self.get_piececode_given_square(piece_x + i, piece_y + j)[0] != piece_code[0]:
                             possible_moves.append(board.get_square(piece_x + i, piece_y + j))
             case "R":
                 # vertical line above given square
                 for y in range(piece_y + 1, 8):
-                    if self.is_valid_location(piece_x, y) and self.is_valid_move(current_square, board.get_square(piece_x, y), board) and self.get_piececode_given_square(piece_x, y)[0] != piece_code[0]:
+                    if self.is_valid_location(piece_x, y) and self.is_valid_move(current_square, board.get_square(piece_x, y), board) \
+                            and self.get_piececode_given_square(piece_x, y)[0] != piece_code[0]:
                         possible_moves.append(board.get_square(piece_x, y))
 
                 # vertical line under given square
                 for y in range(piece_y - 1, -1, -1):
-                    if self.is_valid_location(piece_x, y) and self.is_valid_move(current_square, board.get_square(piece_x, y), board) and self.get_piececode_given_square(piece_x, y)[0] != piece_code[0]:
+                    if self.is_valid_location(piece_x, y) and self.is_valid_move(current_square, board.get_square(piece_x, y), board) \
+                            and self.get_piececode_given_square(piece_x, y)[0] != piece_code[0]:
                         possible_moves.append(board.get_square(piece_x, y))
 
                 # horizontal line to the right of the given square
                 for x in range(piece_x + 1, 8):
-                    if self.is_valid_location(x, piece_y) and self.is_valid_move(current_square, board.get_square(x, piece_y), board) and self.get_piececode_given_square(x, piece_y)[0] != piece_code[0]:
+                    if self.is_valid_location(x, piece_y) and self.is_valid_move(current_square, board.get_square(x, piece_y), board) \
+                            and self.get_piececode_given_square(x, piece_y)[0] != piece_code[0]:
                         possible_moves.append(board.get_square(x, piece_y))
 
                 # horizontal line to the left of the given square
                 for x in range(piece_x - 1, -1, -1):
-                    if self.is_valid_location(x, piece_y) and self.is_valid_move(current_square, board.get_square(x, piece_y), board) and self.get_piececode_given_square(x, piece_y)[0] != piece_code[0]:
+                    if self.is_valid_location(x, piece_y) and self.is_valid_move(current_square, board.get_square(x, piece_y), board) \
+                            and self.get_piececode_given_square(x, piece_y)[0] != piece_code[0]:
                         possible_moves.append(board.get_square(x, piece_y))
             case "B":
                 # diagonal line upper right
                 for step in range(1, max(piece_x, piece_y), 8):
-                    if self.is_valid_move(current_square, board.get_square(piece_x + step - max(piece_x, piece_y), piece_y + step - max(piece_x, piece_y)), board) and self.get_piececode_given_square(piece_x + step - max(piece_x, piece_y), piece_y + step - max(piece_x, piece_y))[0] != piece_code[0]:
+                    if self.is_valid_move(current_square, board.get_square(piece_x + step - max(piece_x, piece_y), piece_y + step - max(piece_x, piece_y)), board) \
+                            and self.get_piececode_given_square(piece_x + step - max(piece_x, piece_y), piece_y + step - max(piece_x, piece_y))[0] != piece_code[0]:
                         possible_moves.append(board.get_square(piece_x + step - max(piece_x, piece_y), piece_y + step - max(piece_x, piece_y)))
 
                 # diagonal line lower right
                 for step in range(1, min(7 - piece_x, piece_y) + 1):
-                    if self.is_valid_move(current_square, board.get_square(piece_x + step, piece_y - step), board) and self.get_piececode_given_square(piece_x + step, piece_y - step)[0] != piece_code[0]:
+                    if self.is_valid_move(current_square, board.get_square(piece_x + step, piece_y - step), board) \
+                            and self.get_piececode_given_square(piece_x + step, piece_y - step)[0] != piece_code[0]:
                         possible_moves.append(board.get_square(piece_x + step, piece_y - step))
 
                 # diagonal line upper left
                 for step in range(1, min(piece_x, 7 - piece_y) + 1):
-                    if self.is_valid_move(current_square, board.get_square(piece_x - step, piece_y + step), board) and self.get_piececode_given_square(piece_x - step, piece_y + step)[0] != piece_code[0]:
+                    if self.is_valid_move(current_square, board.get_square(piece_x - step, piece_y + step), board) \
+                            and self.get_piececode_given_square(piece_x - step, piece_y + step)[0] != piece_code[0]:
                         possible_moves.append(board.get_square(piece_x - step, piece_y + step))
 
                 # diagonal line lower left
                 for step in range(1, min(piece_x, piece_y) + 1):
-                    if self.is_valid_move(current_square, board.get_square(piece_x - step, piece_y - step), board) and self.get_piececode_given_square(piece_x - step, piece_y - step)[0] != piece_code[0]:
+                    if self.is_valid_move(current_square, board.get_square(piece_x - step, piece_y - step), board) \
+                            and self.get_piececode_given_square(piece_x - step, piece_y - step)[0] != piece_code[0]:
                         possible_moves.append(board.get_square(piece_x - step, piece_y - step))
             case "Q":
                 possible_moves = self.get_possible_moves("XR", piece_x, piece_y, board) + self.get_possible_moves("XB", piece_x, piece_y, board)
@@ -419,14 +428,20 @@ class Game:
                     moves_to_check = [(0, -1), (0, -2), (-1, -1), (1, -1)]
 
                 for move in moves_to_check:
-                    if self.is_valid_location(piece_x + move[0], piece_y + move[1]) and self.is_valid_move(current_square, board.get_square(piece_x + move[0], piece_y + move[1]), board) and self.get_piececode_given_square(piece_x + move[0], piece_y + move[1])[0] != piece_code[0]:
+                    if self.is_valid_location(piece_x + move[0], piece_y + move[1]) \
+                            and self.is_valid_move(current_square, board.get_square(piece_x + move[0], piece_y + move[1]), board) \
+                            and self.get_piececode_given_square(piece_x + move[0], piece_y + move[1])[0] != piece_code[0]:
                         possible_moves.append(board.get_square(piece_x + move[0], piece_y + move[1]))
             case "N":
                 for i in [-1, 1]:
                     for j in [-1, 1]:
-                        if self.is_valid_location(piece_x + 1*i, piece_y + 2*j) and self.is_valid_move(current_square, board.get_square(piece_x + 1*i, piece_y + 2*j), board) and self.get_piececode_given_square(piece_x + 1*i, piece_y + 2*j)[0] != piece_code[0]:
+                        if self.is_valid_location(piece_x + 1*i, piece_y + 2*j) \
+                                and self.is_valid_move(current_square, board.get_square(piece_x + 1*i, piece_y + 2*j), board) \
+                                and self.get_piececode_given_square(piece_x + 1*i, piece_y + 2*j)[0] != piece_code[0]:
                             possible_moves.append(board.get_square(piece_x + 1*i, piece_y + 2*j))
-                        if self.is_valid_location(piece_x + 2*i, piece_y + 1*j) and self.is_valid_move(current_square, board.get_square(piece_x + 2*i, piece_y + 1*j), board) and self.get_piececode_given_square(piece_x + 2*i, piece_y + 1*j)[0] != piece_code[0]:
+                        if self.is_valid_location(piece_x + 2*i, piece_y + 1*j) \
+                                and self.is_valid_move(current_square, board.get_square(piece_x + 2*i, piece_y + 1*j), board) \
+                                and self.get_piececode_given_square(piece_x + 2*i, piece_y + 1*j)[0] != piece_code[0]:
                             possible_moves.append(board.get_square(piece_x + 2*i, piece_y + 1*j))
         return possible_moves
 

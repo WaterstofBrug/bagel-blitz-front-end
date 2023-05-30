@@ -100,5 +100,4 @@ class Board:
         moveable_squares = game_state.get_possible_moves(game_state.get_piece_from_square(square), self)
 
         for moveable_square in moveable_squares:
-            print(moveable_square.x, moveable_square.y)
             moveable_square.graphical_obj.color = (72, 225, 174)
