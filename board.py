@@ -82,6 +82,7 @@ class Board:
         for piece in self.pieces:
             if piece.x == square.x and piece.y == square.y:
                 return piece
+        return None
 
     def update_pieces(self, game_state):
         for piece in self.pieces:
@@ -94,3 +95,10 @@ class Board:
             self.pieces.remove(piece)
 
         self.pieces = self.create_pieces(game_sate.pieces, self.pieces_batch)
+
+    def show_possible_moves(self, square, game_state):
+        moveable_squares = game_state.get_possible_moves(game_state.get_piece_from_square(square), self)
+
+        for moveable_square in moveable_squares:
+            print(moveable_square.x, moveable_square.y)
+            moveable_square.graphical_obj.color = (72, 225, 174)

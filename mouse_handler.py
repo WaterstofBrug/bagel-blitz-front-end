@@ -1,10 +1,13 @@
 from enumerators import GUIObjects
 
 
-def handle_first_click(x, y, button, modifiers, board):  # handles a first click on the board
+def handle_first_click(x, y, button, modifiers, board, game_state):  # handles a first click on the board
     board.deselect()
     rel_x, rel_y = board.get_rel_xy(x, y)
-    board.get_square(rel_x, rel_y).select()
+    square = board.get_square(rel_x, rel_y)
+    square.select()
+    if board.get_piece(square) is not None:
+        board.show_possible_moves(square, game_state)
 
 
 def handle_second_click(x, y, button, modifiers, board, game_state, GUI):  # handles a second click on the board
@@ -25,7 +28,7 @@ def handle_second_click(x, y, button, modifiers, board, game_state, GUI):  # han
         board.deselect()
         GUI.update_clocks()
     else:  # selecting a new piece
-        handle_first_click(x, y, button, modifiers, board)
+        handle_first_click(x, y, button, modifiers, board, game_state)
 
 
 def on_board(x, y, board):  # returns true iff the click was on the board

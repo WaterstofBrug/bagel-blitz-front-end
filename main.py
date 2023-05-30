@@ -78,7 +78,7 @@ def main():
             if board.is_selected():
                 handle_second_click(x, y, button, modifiers, board, game_state, GUI_)
             else:
-                handle_first_click(x, y, button, modifiers, board)
+                handle_first_click(x, y, button, modifiers, board, game_state)
         elif on_button(x, y, GUI_):  # clicked on a button
             handle_button(x, y, button, modifiers, GUI_)
         else:  # clicked on nothing
