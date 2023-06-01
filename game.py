@@ -397,7 +397,7 @@ class Game:
                         possible_moves.append(board.get_square(x, piece_y))
             case "B":
                 # diagonal line upper right TODO; fix deze
-                for step in range(1, max(7 - piece_x, 7 - piece_y), 8):
+                for step in range(1, min(7-piece_x, 7-piece_y) + 1, 1):
                     if self.is_valid_move(current_square, board.get_square(piece_x + step, piece_y + step), board) \
                             and self.get_piececode_given_square(piece_x + step, piece_y + step)[0] != piece_code[0]:
                         possible_moves.append(board.get_square(piece_x + step, piece_y + step))
@@ -420,8 +420,8 @@ class Game:
                             and self.get_piececode_given_square(piece_x - step, piece_y - step)[0] != piece_code[0]:
                         possible_moves.append(board.get_square(piece_x - step, piece_y - step))
             case "Q":
-                possible_moves = self.get_possible_moves_raw_inputs("XR", piece_x, piece_y, board) \
-                                 + self.get_possible_moves_raw_inputs("XB", piece_x, piece_y, board)
+                possible_moves = self.get_possible_moves_raw_inputs(piece_code[0]+"R", piece_x, piece_y, board) \
+                                 + self.get_possible_moves_raw_inputs(piece_code[0]+"B", piece_x, piece_y, board)
             case "P":
                 if piece_code[0] == "W":
                     moves_to_check = [(0, 1), (0, 2), (-1, 1), (1, 1)]
@@ -448,5 +448,6 @@ class Game:
 
     def get_possible_moves(self, piece, board):
         return self.get_possible_moves_raw_inputs(piece.code, piece.x, piece.y, board)
+
     def has_possible_moves(self, piece, board):  # returns true iff a piece has a possible move
         return len(self.get_possible_moves(piece, board)) > 0

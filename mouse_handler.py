@@ -1,4 +1,5 @@
 from enumerators import GUIObjects
+from enumerators import WinStates
 
 
 def handle_first_click(x, y, button, modifiers, board, game_state):  # handles a first click on the board
@@ -27,6 +28,10 @@ def handle_second_click(x, y, button, modifiers, board, game_state, GUI):  # han
         board.update_pieces(game_state)
         board.deselect()
         GUI.update_clocks()
+        if game_state.is_pat(game_state.get_opponents_color()):
+            game_state.win_state = WinStates.PAT
+        elif game_state.is_mat(game_state.get_opponents_color()):
+            game_state.win_state = game_state.set_winner(game_state.get_opponents_color())
     else:  # selecting a new piece
         handle_first_click(x, y, button, modifiers, board, game_state)
 
