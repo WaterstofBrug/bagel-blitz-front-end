@@ -1,7 +1,6 @@
 from enumerators import Color, WinStates
 from piece import PieceLogic
-from copy import copy
-
+from board import Board
 """
 Game class stores and handles all the game state data.
 """
@@ -451,3 +450,17 @@ class Game:
 
     def has_possible_moves(self, piece, board):  # returns true iff a piece has a possible move
         return len(self.get_possible_moves(piece, board)) > 0
+
+    def color_has_possible_moves(self, color, board): # for White set color to "W", for Black: "B"
+        for x in range(8):
+            for y in range(8):
+                piece = Board.get_piece(Board.get_square(x, y))
+                if piece.code[0] == color and self.has_possible_moves(piece, board):
+                    return True
+        return False
+
+    def is_pat(self, color, board): # color managed to draw with a stalemate
+        return not self.king_is_in_check() and not self.color_has_possible_moves(color, board)
+
+    def is_mat(self, color, board): # color lost to a check mate
+        return self.king_is_in_check() and not self.color_has_possible_moves(color, board)
