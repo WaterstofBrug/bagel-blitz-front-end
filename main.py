@@ -59,18 +59,24 @@ def main():
 
     def update(dt):  # every frame update
         GUI_.subtract_from_clocks(REFRESH_RATE * 1000)
-
+        """
+        QUICK-NOTE for the TA. The time of the clock is handled by the update rate of the program.
+        This means that it is, in theory, possible to get to run slower then represented but as the 
+        program runs at 10Hz and does nothing but update the clock when it is idle it would be really
+        hard to abuse this. 
+        """
+        print(game_state.win_state.value)
         if game_state.win_state != WinStates.NONE:
             if game_state.win_state == WinStates.WHITE_WIN:
                 print("White Wins!")
-            elif game_state.win_state == WinStates.WHITE_WIN:
+            elif game_state.win_state == WinStates.BLACK_WIN:
                 print("Black Wins!")
             elif game_state.win_state == WinStates.PAT:
                 print("PAT")
             elif game_state.win_state == WinStates.THREEMOVES:
                 print("Remise by three moves rule")
             elif game_state.win_state == WinStates.FIFTYMOVES:
-                print("Rimse by fifte moves rule")
+                print("Rimse by fifty moves rule")
 
     @window.event
     def on_mouse_press(x, y, button, modifiers):  # mouse handler

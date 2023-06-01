@@ -79,6 +79,7 @@ class GUI:
                 self.clocks[0].un_pause()
                 self.clocks[1].reset()
                 self.clocks[1].do_pause()
+                self.board.deselect()
 
     def subtract_from_clocks(self, miliseconds):
         for clock in self.clocks:

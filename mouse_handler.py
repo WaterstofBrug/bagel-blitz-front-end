@@ -28,10 +28,11 @@ def handle_second_click(x, y, button, modifiers, board, game_state, GUI):  # han
         board.update_pieces(game_state)
         board.deselect()
         GUI.update_clocks()
-        if game_state.is_pat(game_state.get_opponents_color()):
+        if game_state.is_pat(game_state.get_players_color(), board):
             game_state.win_state = WinStates.PAT
-        elif game_state.is_mat(game_state.get_opponents_color()):
-            game_state.win_state = game_state.set_winner(game_state.get_opponents_color())
+        elif game_state.is_mat(game_state.get_players_color(), board):
+            game_state.win_state = game_state.set_winner(game_state.get_players_color())
+            print(game_state.win_state.value)
     else:  # selecting a new piece
         handle_first_click(x, y, button, modifiers, board, game_state)
 
