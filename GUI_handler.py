@@ -63,7 +63,8 @@ class GUI:
     def GUI_event_handler(self, event):
         match event:
             case "toggle_pause":
-                if self.clocks[0].pause and self.clocks[1].pause:
+                if self.clocks[0].pause and self.clocks[1].pause and \
+                        not ("Win" in self.labels[0].text or "Rem" in self.labels[0].text):
                     if self.clocks[0].color == self.game_state.color_to_move:
                         self.clocks[0].un_pause()
                     else:
@@ -80,6 +81,7 @@ class GUI:
                 self.clocks[1].reset()
                 self.clocks[1].do_pause()
                 self.board.deselect()
+                self.labels[0].text = ""
 
     def subtract_from_clocks(self, miliseconds):
         for clock in self.clocks:
@@ -100,3 +102,12 @@ class GUI:
         for button in self.buttons:
             if button.event == event:
                 button.on_click()
+
+    def dispatch_win(self, color):
+        self.GUI_event_handler("toggle_pause")
+        self.labels[0].text = f"Winner: {color}"
+
+    def dispatch_remise(self, type):
+        self.GUI_event_handler("toggle_pause")
+        self.labels[0].text = f"Remise: {type}"
+

@@ -1,4 +1,4 @@
-from enumerators import Color, WinStates
+from enumerators import Color
 from piece import PieceLogic
 from board import Board
 from copy import copy
@@ -15,7 +15,7 @@ class Game:
         self.history = history
         self.pieces_moved = {"WK": False, "BK": False, "WR-King-Side": False, "WR-Queen-Side": False,
                              "BR-King-Side": False, "BR-Queen-Side": False}
-        self.win_state = WinStates.NONE
+        self.win_state = "None"
 
     def add_pieces(self):
         pawns = [PieceLogic("WP", i, 1) for i in range(0, 8)] + [PieceLogic("BP", i, 6) for i in range(0, 8)]
@@ -25,6 +25,7 @@ class Game:
         kings = [PieceLogic("WK", 3, 0), PieceLogic("BK", 3, 7)]
         queens = [PieceLogic("WQ", 4, 0), PieceLogic("BQ", 4, 7)]
 
+
         self.pieces = pawns + bischops + rooks + knights + kings + queens
 
     def restart(self):
@@ -33,7 +34,7 @@ class Game:
         self.color_to_move = Color.WHITE
         for key in self.pieces_moved:
             self.pieces_moved[key] = False
-        self.win_state = WinStates.NONE
+        self.win_state = "None"
 
     def get_piece_from_square(self, square):  # returns the piece at the square given
         for piece in self.pieces:
@@ -74,9 +75,26 @@ class Game:
 
     def square_is_not_attacked(self, square_x, square_y):  # returns true if the given square is not under attack,
         # false otherwise
+
         # vertical line above given square
         opponents_color = self.get_opponents_color()
         players_color = self.get_players_color()
+
+        if players_color == Color.WHITE:
+            if self.contains_given_piece(square_x - 1, square_y + 1,opponents_color + "P") \
+                    or self.contains_given_piece(square_x + 1, square_y + 1,opponents_color + "P"):
+                return False
+        else:
+            if self.contains_given_piece(square_x - 1, square_y - 1,opponents_color + "P") \
+                    or self.contains_given_piece(square_x + 1, square_y - 1,opponents_color + "P"):
+                return False
+
+        for i in [-1, 0, 1]:
+            for j in [-1, 0, 1]:
+                if not (i == 0 and j == 0) and self.is_valid_location(square_x + i, square_y + j):
+                    if self.contains_given_piece(square_x + i, square_y + j, opponents_color + "K"):
+                        return False
+
         for y in range(square_y, 8):
             if not self.contains_given_pieces(square_x, y, [opponents_color + "R", opponents_color + "Q"]):
                 if not self.contains_given_pieces(square_x, y, ["EMPTY", players_color + "K"]):
@@ -111,10 +129,11 @@ class Game:
         # diagonal line upper right
         for step in range(max(square_x, square_y), 8):
             if not self.contains_given_pieces(square_x + step - max(square_x, square_y),
-                                         square_y + step - max(square_x, square_y),
-                                         [opponents_color + "B", opponents_color + "Q"]):
+                                              square_y + step - max(square_x, square_y),
+                                              [opponents_color + "B", opponents_color + "Q"]):
                 if not self.contains_given_pieces(square_x + step - max(square_x, square_y),
-                                            square_y + step - max(square_x, square_y), ["EMPTY", players_color + "K"]):
+                                                  square_y + step - max(square_x, square_y),
+                                                  ["EMPTY", players_color + "K"]):
                     break
             else:
                 return False
@@ -122,7 +141,7 @@ class Game:
         # diagonal line lower right
         for step in range(0, min(7 - square_x, square_y) + 1):
             if not self.contains_given_pieces(square_x + step, square_y - step,
-                                         [opponents_color + "B", opponents_color + "Q"]):
+                                              [opponents_color + "B", opponents_color + "Q"]):
                 if not self.contains_given_pieces(square_x + step, square_y - step, ["EMPTY", players_color + "K"]):
                     break
             else:
@@ -131,7 +150,7 @@ class Game:
         # diagonal line upper left
         for step in range(0, min(square_x, 7 - square_y) + 1):
             if not self.contains_given_pieces(square_x - step, square_y + step,
-                                         [opponents_color + "B", opponents_color + "Q"]):
+                                              [opponents_color + "B", opponents_color + "Q"]):
                 if not self.contains_given_pieces(square_x - step, square_y + step, ["EMPTY", players_color + "K"]):
                     break
             else:
@@ -140,7 +159,7 @@ class Game:
         # diagonal line lower left
         for step in range(0, min(square_x, square_y) + 1):
             if not self.contains_given_pieces(square_x - step, square_y - step,
-                                         [opponents_color + "B", opponents_color + "Q"]):
+                                              [opponents_color + "B", opponents_color + "Q"]):
                 if not self.contains_given_pieces(square_x - step, square_y - step, ["EMPTY", players_color + "K"]):
                     break
             else:
@@ -177,7 +196,8 @@ class Game:
                 break
         return not self.square_is_not_attacked(kingpiece.x, kingpiece.y)
 
-    def passes_through_pieces(self, piecetype, from_square, to_square):  # returns true if the move passes through pieces
+    def passes_through_pieces(self, piecetype, from_square,
+                              to_square):  # returns true if the move passes through pieces
         opponents_color = self.get_opponents_color()
 
         match piecetype:
@@ -243,21 +263,22 @@ class Game:
             if from_square.y == to_square.y:
                 if to_square.x - from_square.x == -2:  # king-side
                     return not self.pieces_moved[players_color + "R-King-Side"] \
-                        and not self.passes_through_pieces("R", from_square, to_square) \
-                        and not self.after_move_king_in_check(from_square,
-                                                              board.get_square(from_square.x - 1, from_square.y))
+                           and not self.passes_through_pieces("R", from_square, to_square) \
+                           and not self.after_move_king_in_check(from_square,
+                                                                 board.get_square(from_square.x - 1, from_square.y))
                 elif to_square.x - from_square.x == 2:
                     return not self.pieces_moved[players_color + "R-Queen-Side"] \
-                        and not self.passes_through_pieces("R", from_square, to_square) \
-                        and not self.after_move_king_in_check(from_square,
-                                                              board.get_square(from_square.x + 1, from_square.y))
+                           and not self.passes_through_pieces("R", from_square, to_square) \
+                           and not self.after_move_king_in_check(from_square,
+                                                                 board.get_square(from_square.x + 1, from_square.y))
         return False
 
     def is_valid_move(self, from_square, to_square, board):  # returns true iff the move requested is allowed
         def basic_move_restriction():  # enforces basic move restrictions as playing the right color,
             # staying in the board, and making sure you are not in check.
-            return self.is_valid_location(to_square.x, to_square.y) and not self.after_move_king_in_check(from_square, to_square) \
-                and self.color_to_move == piece.get_color()
+            return self.is_valid_location(to_square.x, to_square.y) and not self.after_move_king_in_check(from_square,
+                                                                                                          to_square) \
+                   and self.color_to_move == piece.get_color()
 
         piece = self.get_piece_from_square(from_square)
         piecetype = piece.code[1:]
@@ -268,7 +289,8 @@ class Game:
                     return basic_move_restriction() and not self.passes_through_pieces("B", from_square, to_square)
                 return False
             case "K":  # king
-                if abs(to_square.x - from_square.x) <= 1 and abs(to_square.y - from_square.y) <= 1 or self.valid_castle(from_square, to_square, board):
+                if abs(to_square.x - from_square.x) <= 1 and abs(to_square.y - from_square.y) <= 1 or self.valid_castle(
+                        from_square, to_square, board):
                     return basic_move_restriction()
                 return False
             case "N":  # Knight
@@ -279,8 +301,10 @@ class Game:
             case "P":  # Pawn
                 # TODO: EN PASSANT STILL HAS TO BE IMPLEMENTED
                 def basic_pawn_move_check():
-                    pawn_takes = abs(from_square.x - to_square.x) == 1 and not self.square_is_empty(to_square.x, to_square.y) and \
-                                 self.get_piececode_given_square(to_square.x, to_square.y)[0] == self.get_opponents_color()
+                    pawn_takes = abs(from_square.x - to_square.x) == 1 and not self.square_is_empty(to_square.x,
+                                                                                                    to_square.y) and \
+                                 self.get_piececode_given_square(to_square.x, to_square.y)[
+                                     0] == self.get_opponents_color()
                     pawn_goes_straight = from_square.x == to_square.x
                     return (pawn_goes_straight and self.square_is_empty(to_square.x, to_square.y)) or pawn_takes
 
@@ -317,11 +341,13 @@ class Game:
         if piece.code[1] == "K" and self.valid_castle(from_square, to_square, board):
             players_color = self.get_players_color()
             if to_square.x - from_square.x == -2:  # king-side
-                self.move(board.get_square(0, from_square.y), board.get_square(2, from_square.y), board, ghost_move=True)
+                self.move(board.get_square(0, from_square.y), board.get_square(2, from_square.y), board,
+                          ghost_move=True)
                 pieceGUI = board.get_piece(board.get_square(0, from_square.y))
                 pieceGUI.move_to(2, from_square.y)
             else:  # queen-side
-                self.move(board.get_square(7, from_square.y), board.get_square(4, from_square.y), board, ghost_move=True)
+                self.move(board.get_square(7, from_square.y), board.get_square(4, from_square.y), board,
+                          ghost_move=True)
                 pieceGUI = board.get_piece(board.get_square(7, from_square.y))
                 pieceGUI.move_to(4, from_square.y)
 
@@ -358,7 +384,8 @@ class Game:
         piece = self.get_piece_from_square(square)
         self.pieces.remove(piece)
 
-    def get_possible_moves_raw_inputs(self, piece_code, piece_x, piece_y, board):  # returns a list of possible moves concerning piece type and pieces on the board
+    def get_possible_moves_raw_inputs(self, piece_code, piece_x, piece_y,
+                                      board):  # returns a list of possible moves concerning piece type and pieces on the board
         possible_moves = []
 
         current_square = board.get_square(piece_x, piece_y)
@@ -369,36 +396,42 @@ class Game:
             case "K":
                 for i in [-1, 0, 1]:
                     for j in [-1, 0, 1]:
-                        if not (i == 0 and j == 0) and self.is_valid_move(current_square, board.get_square(piece_x + i, piece_y + j), board) \
+                        if not (i == 0 and j == 0) and self.is_valid_move(current_square,
+                                                                          board.get_square(piece_x + i, piece_y + j),
+                                                                          board) \
                                 and self.get_piececode_given_square(piece_x + i, piece_y + j)[0] != piece_code[0]:
                             possible_moves.append(board.get_square(piece_x + i, piece_y + j))
             case "R":
                 # vertical line above given square
                 for y in range(piece_y + 1, 8):
-                    if self.is_valid_location(piece_x, y) and self.is_valid_move(current_square, board.get_square(piece_x, y), board) \
+                    if self.is_valid_location(piece_x, y) and self.is_valid_move(current_square,
+                                                                                 board.get_square(piece_x, y), board) \
                             and self.get_piececode_given_square(piece_x, y)[0] != piece_code[0]:
                         possible_moves.append(board.get_square(piece_x, y))
 
                 # vertical line under given square
                 for y in range(piece_y - 1, -1, -1):
-                    if self.is_valid_location(piece_x, y) and self.is_valid_move(current_square, board.get_square(piece_x, y), board) \
+                    if self.is_valid_location(piece_x, y) and self.is_valid_move(current_square,
+                                                                                 board.get_square(piece_x, y), board) \
                             and self.get_piececode_given_square(piece_x, y)[0] != piece_code[0]:
                         possible_moves.append(board.get_square(piece_x, y))
 
                 # horizontal line to the right of the given square
                 for x in range(piece_x + 1, 8):
-                    if self.is_valid_location(x, piece_y) and self.is_valid_move(current_square, board.get_square(x, piece_y), board) \
+                    if self.is_valid_location(x, piece_y) and self.is_valid_move(current_square,
+                                                                                 board.get_square(x, piece_y), board) \
                             and self.get_piececode_given_square(x, piece_y)[0] != piece_code[0]:
                         possible_moves.append(board.get_square(x, piece_y))
 
                 # horizontal line to the left of the given square
                 for x in range(piece_x - 1, -1, -1):
-                    if self.is_valid_location(x, piece_y) and self.is_valid_move(current_square, board.get_square(x, piece_y), board) \
+                    if self.is_valid_location(x, piece_y) and self.is_valid_move(current_square,
+                                                                                 board.get_square(x, piece_y), board) \
                             and self.get_piececode_given_square(x, piece_y)[0] != piece_code[0]:
                         possible_moves.append(board.get_square(x, piece_y))
             case "B":
                 # diagonal line upper right TODO; fix deze
-                for step in range(1, min(7-piece_x, 7-piece_y) + 1, 1):
+                for step in range(1, min(7 - piece_x, 7 - piece_y) + 1, 1):
                     if self.is_valid_move(current_square, board.get_square(piece_x + step, piece_y + step), board) \
                             and self.get_piececode_given_square(piece_x + step, piece_y + step)[0] != piece_code[0]:
                         possible_moves.append(board.get_square(piece_x + step, piece_y + step))
@@ -421,8 +454,8 @@ class Game:
                             and self.get_piececode_given_square(piece_x - step, piece_y - step)[0] != piece_code[0]:
                         possible_moves.append(board.get_square(piece_x - step, piece_y - step))
             case "Q":
-                possible_moves = self.get_possible_moves_raw_inputs(piece_code[0]+"R", piece_x, piece_y, board) \
-                                 + self.get_possible_moves_raw_inputs(piece_code[0]+"B", piece_x, piece_y, board)
+                possible_moves = self.get_possible_moves_raw_inputs(piece_code[0] + "R", piece_x, piece_y, board) \
+                                 + self.get_possible_moves_raw_inputs(piece_code[0] + "B", piece_x, piece_y, board)
             case "P":
                 if piece_code[0] == "W":
                     moves_to_check = [(0, 1), (0, 2), (-1, 1), (1, 1)]
@@ -431,20 +464,26 @@ class Game:
 
                 for move in moves_to_check:
                     if self.is_valid_location(piece_x + move[0], piece_y + move[1]) \
-                            and self.is_valid_move(current_square, board.get_square(piece_x + move[0], piece_y + move[1]), board) \
-                            and self.get_piececode_given_square(piece_x + move[0], piece_y + move[1])[0] != piece_code[0]:
+                            and self.is_valid_move(current_square,
+                                                   board.get_square(piece_x + move[0], piece_y + move[1]), board) \
+                            and self.get_piececode_given_square(piece_x + move[0], piece_y + move[1])[0] != piece_code[
+                        0]:
                         possible_moves.append(board.get_square(piece_x + move[0], piece_y + move[1]))
             case "N":
                 for i in [-1, 1]:
                     for j in [-1, 1]:
-                        if self.is_valid_location(piece_x + 1*i, piece_y + 2*j) \
-                                and self.is_valid_move(current_square, board.get_square(piece_x + 1*i, piece_y + 2*j), board) \
-                                and self.get_piececode_given_square(piece_x + 1*i, piece_y + 2*j)[0] != piece_code[0]:
-                            possible_moves.append(board.get_square(piece_x + 1*i, piece_y + 2*j))
-                        if self.is_valid_location(piece_x + 2*i, piece_y + 1*j) \
-                                and self.is_valid_move(current_square, board.get_square(piece_x + 2*i, piece_y + 1*j), board) \
-                                and self.get_piececode_given_square(piece_x + 2*i, piece_y + 1*j)[0] != piece_code[0]:
-                            possible_moves.append(board.get_square(piece_x + 2*i, piece_y + 1*j))
+                        if self.is_valid_location(piece_x + 1 * i, piece_y + 2 * j) \
+                                and self.is_valid_move(current_square,
+                                                       board.get_square(piece_x + 1 * i, piece_y + 2 * j), board) \
+                                and self.get_piececode_given_square(piece_x + 1 * i, piece_y + 2 * j)[0] != piece_code[
+                            0]:
+                            possible_moves.append(board.get_square(piece_x + 1 * i, piece_y + 2 * j))
+                        if self.is_valid_location(piece_x + 2 * i, piece_y + 1 * j) \
+                                and self.is_valid_move(current_square,
+                                                       board.get_square(piece_x + 2 * i, piece_y + 1 * j), board) \
+                                and self.get_piececode_given_square(piece_x + 2 * i, piece_y + 1 * j)[0] != piece_code[
+                            0]:
+                            possible_moves.append(board.get_square(piece_x + 2 * i, piece_y + 1 * j))
         return possible_moves
 
     def get_possible_moves(self, piece, board):
@@ -459,18 +498,14 @@ class Game:
                 return True
         return False
 
-    def is_pat(self, color, board): # color managed to draw with a stalemate
+    def is_pat(self, color, board):  # color managed to draw with a stalemate
         return not self.king_is_in_check() and not self.color_has_possible_moves(color, board)
 
-    def is_mat(self, color, board): # color lost to a check mate
+    def is_mat(self, color, board):  # color lost to a check mate
         return self.king_is_in_check() and not self.color_has_possible_moves(color, board)
 
-    def set_winner(self, color):
-        if color == "W":
-            self.win_state = WinStates.WHITE_WIN
+    def set_winner(self, color, GUI):
+        if color == "B":
+            GUI.dispatch_win("WHITE")
         else:
-            self.win_state = WinStates.BLACK_WIN
-
-        print(self.win_state.value)
-        print("trallalalaalalallalalalalallalalalalala")
-
+            GUI.dispatch_win("BLACK")
