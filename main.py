@@ -32,12 +32,6 @@ def main():
     game_state.add_pieces()
     board = Board(size=300, padding_x=60, padding_y=50, batch=board_batch, pieces=game_state.pieces, pieces_batch=pieces_batch)
 
-    def on_click():
-        print("click")
-
-    def on_release():
-        print("release")
-
     # shape creation
     BG = pyglet.shapes.Rectangle(0, 0, WINDOW_X, WINDOW_Y, GUIColors.BACKGROUND.value, batch=background)
 
