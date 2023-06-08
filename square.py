@@ -1,4 +1,3 @@
-from enum import Enum
 import pyglet
 from enumerators import Color, SquareState as State, GUIColors
 
@@ -18,7 +17,7 @@ class Square:
         self.graphical_obj = pyglet.shapes.Rectangle(x * size + padding[0], y * size + padding[1],
                                                      size, size, self.color.value, batch=batch)
 
-    def select(self):
+    def select(self):  # selects the square
         self.state = State.SELECTED
 
         if self.color == Color.WHITE:
@@ -26,7 +25,7 @@ class Square:
         else:
             self.graphical_obj.color = GUIColors.SELECTED_DARK_SQUARE.value
 
-    def deselect(self):
+    def deselect(self):  # deselects the square
         self.state = State.IDLE
 
         if self.color == Color.WHITE:
@@ -34,10 +33,10 @@ class Square:
         else:
             self.graphical_obj.color = GUIColors.DARK_SQUARE.value
 
-    def equals(self, other):
+    def equals(self, other):  # return true iff the squares' x and y match
         return self.x == other.x and self.y == other.y
 
-    def update_graphics(self, new_padding, new_size):
+    def update_graphics(self, new_padding, new_size):  # updates the location and size based on the window size
         self.padding = new_padding
         self.size = new_size
 
@@ -46,7 +45,8 @@ class Square:
         self.graphical_obj.width = self.size
         self.graphical_obj.height = self.size
 
-def determine_color(i, j):
-    if (i + j) % 2 == 0:
+
+def determine_color(x, y):  # returns the color of a square based on the (x, y) given
+    if (x + y) % 2 == 0:
         return Color.BLACK
     return Color.WHITE

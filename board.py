@@ -3,7 +3,6 @@ from enumerators import SquareState
 from square import Square
 from piece import PieceGUI
 
-
 """
 Board class stores and handles all the GUI of the board
 """
@@ -84,19 +83,19 @@ class Board:
                 return piece
         return None
 
-    def update_pieces(self, game_state):
+    def update_pieces(self, game_state):  # removes any pieces which are no longer in the game_state
         for piece in self.pieces:
             if piece.code != game_state.get_piece_from_square(self.get_square(piece.x, piece.y)).code:
                 self.pieces.remove(piece)
 
-    def restart(self, game_sate):
+    def restart(self, game_sate):  # deletes all pieces and creates new ones
         for piece in self.pieces:
             piece.sprite.delete()
             self.pieces.remove(piece)
 
         self.pieces = self.create_pieces(game_sate.pieces, self.pieces_batch)
 
-    def show_possible_moves(self, square, game_state):
+    def show_possible_moves(self, square, game_state):  # changes the color of the squares which are able to be move to
         moveable_squares = game_state.get_possible_moves(game_state.get_piece_from_square(square), self)
 
         for moveable_square in moveable_squares:

@@ -40,7 +40,7 @@ class PieceGUI:
         self.sprite.x = self.board.get_abs_x(new_x)
         self.sprite.y = self.board.get_abs_y(new_y)
 
-    def update_graphics(self, new_size):
+    def update_graphics(self, new_size):  # updates the size and location based on the window size
         self.size = new_size
         self.sprite.scale_x = self.size / self.sprite_width
         self.sprite.scale_y = self.size / self.sprite_height
@@ -64,7 +64,7 @@ class PieceLogic:
     def __repr__(self):
         return f"{self.code}, {self.x}, {self.y}"
 
-    def get_color(self):
+    def get_color(self):  # returns the color of the piece
         if self.code[0] == "W":
             return Color.WHITE
         else:

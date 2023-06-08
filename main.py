@@ -7,77 +7,11 @@ from enumerators import Color, Side, GUIColors
 from button import Button
 from GUI_handler import GUI
 
-"""
-                                                                                                                                          
-                                                                                                                                          
-                                        ██████████████████                                                                                
-                                ░░▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓                                                                          
-                              ▒▒▒▒▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▒▒                                                                        
-                          ▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓          ░░▓▓▓▓▓▓▓▓▓▓██▓▓▓▓▓▓                                        
-                      ░░██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓        ██▒▒▒▒▓▓▒▒▓▓▒▒▓▓▓▓▓▓██▓▓                                    
-                      ▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░▒▒▒▒░░▒▒░░▒▒░░▒▒▒▒▓▓████████▓▓▓▓▒▒▒▒▒▒▒▒▓▓▒▒▓▓▒▒▓▓▓▓██▓▓                                
-                    ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░▒▒░░░░▒▒░░░░▒▒░░▒▒▒▒▒▒▒▒▓▓░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓                              
-                  ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░▒▒░░░░░░░░░░░░░░░░▒▒░░▒▒▒▒▓▓▒▒▓▓░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▒▒▓▓▓▓▓▓██                            
-                ▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▓▓▓▓░░░░░░░░▒▒▓▓▒▒▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓                          
-                ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░▒▒░░▒▒▒▒▒▒▒▒▒▒▓▓▒▒░░░░░░▒▒▓▓▒▒▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓██                          
-            ░░▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▓▓░░░░░░▒▒▓▓▒▒░░░░░░▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓                          
-            ░░██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░▒▒░░▒▒░░▒▒░░░░░░▒▒░░▒▒▒▒▓▓▒▒▓▓░░░░▒▒▓▓▒▒▒▒░░░░▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓██                        
-            ░░██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓░░░░▒▒▓▓▒▒▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓██                        
-            ░░██▒▒▒▒▒▒▒▒▒▒▓▓▒▒▓▓▒▒▒▒▒▒▒▒░░▒▒░░▒▒░░░░░░░░░░▒▒▒▒░░▒▒░░▒▒▒▒▒▒▒▒▓▓▒▒░░░░▒▒▒▒▒▒▒▒░░▒▒░░▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓                      
-            ░░██▒▒▒▒▓▓▒▒▓▓▒▒▓▓▒▒▒▒▒▒▓▓▒▒▒▒▒▒░░▒▒░░▒▒░░▒▒░░▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓░░░░▒▒▓▓▒▒░░▒▒░░▒▒▒▒▒▒▒▒▓▓▒▒▒▒▓▓▓▓▓▓                      
-            ░░██▒▒▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▓▒▒▓▓▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓░░▒▒▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▒▒▒▒▓▓  ██████              
-            ░░██▒▒▒▒▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▒▒▒▒▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓░░▒▒▓▓▒▒▒▒▒▒░░▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▒▒██▓▓▓▓▓▓▓▓            
-            ░░██▒▒▓▓░░░░░░░░░░░░░░░░▒▒▒▒▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓            
-                ██░░░░░░░░░░░░░░░░░░░░░░▒▒▒▒▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▒▒▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓██          
-              ▓▓░░▓▓▓▓▓▓▓▓▒▒░░░░░░░░░░░░░░░░▒▒▒▒▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓░░▒▒▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▒▒▓▓▒▒▓▓▓▓▓▓██          
-            ██▓▓▓▓▓▓▒▒▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░▒▒▒▒▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▒▒▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▒▒▓▓▓▓░░▒▒▒▒▒▒▒▒▒▒▓▓██          
-        ░░▓▓▓▓▒▒▓▓▒▒▒▒▒▒▒▒▒▒▓▓▒▒▓▓▒▒▓▓▓▓▒▒▓▓░░░░░░░░▒▒▒▒▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▒▒▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓░░▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓        
-        ██▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓░░░░░░░░▒▒▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░▒▒▓▓▒▒▒▒▒▒░░▒▒░░▒▒▒▒▒▒▓▓▒▒▓▓▓▓░░▓▓▒▒▒▒▒▒▓▓▓▓▓▓██        
-      ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▒▒▓▓▓▓░░░░░░▒▒▓▓▒▒▒▒░░▒▒▒▒▒▒░░▒▒░░▒▒░░▓▓▒▒▒▒░░▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▓▓░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓██        
-    ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▒▒▓▓▓▓░░░░░░▒▒▓▓▒▒▒▒░░░░░░░░░░░░░░▒▒▒▒▒▒▓▓░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓░░▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓██        
-    ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓░░░░▒▒▓▓▒▒░░░░░░░░░░░░▒▒░░▓▓▒▒▓▓▒▒░░░░░░▒▒░░▒▒▒▒▒▒░░▒▒░░▒▒░░▒▒▒▒▒▒▓▓▓▓██        
-  ▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░▒▒▓▓░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒░░▒▒░░▒▒░░▒▒▒▒▒▒▒▒░░▒▒░░░░▒▒▒▒▒▒▒▒▒▒▓▓██        
-  ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓░░▒▒▒▒░░▒▒░░▒▒░░▒▒░░▒▒▒▒░░░░░░░░░░▒▒▒▒▒▒▓▓▒▒▒▒░░░░░░▒▒▒▒▒▒▒▒▒▒██          
-  ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░▒▒▒▒▒▒░░▒▒▓▓░░▒▒  ▒▒░░▒▒▒▒▒▒░░▒▒░░▒▒░░▒▒░░▒▒░░▒▒░░▒▒  ▒▒░░▒▒▒▒▒▒▓▓▒▒██        
-  ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░▒▒▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░▒▒▒▒▒▒▒▒▒▒░░░░▒▒░░░░▒▒██░░░░░░░░░░▒▒░░▒▒▒▒▒▒░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▓▓▒▒██      
-  ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░▒▒░░▒▒░░▒▒▒▒▒▒░░▒▒▒▒░░░░░░▒▒██░░░░░░░░░░░░▒▒░░▒▒░░░░▒▒░░▒▒░░░░░░▒▒▒▒▒▒░░▒▒██      
-  ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░▒▒▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░▒▒░░▒▒░░▒▒▒▒▒▒░░░░░░████░░░░░░░░░░▓▓░░▒▒░░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓    
-  ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░▒▒░░▒▒░░██████    ██████████░░██░░░░░░░░░░░░░░░░▒▒░░▒▒▒▒░░▒▒▒▒▒▒▓▓    
-  ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░▒▒░░░░▒▒██░░░░░░    ░░░░░░░░░░  ░░██▓▓▓▓██▓▓██▓▓▓▓░░▒▒▒▒░░▒▒░░▒▒▒▒██    
-  ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░▒▒▒▒▒▒░░▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░  ░░  ░░░░░░██                                        ██░░░░░░░░▒▒░░▒▒██    
-  ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░▒▒░░▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░  ▒▒░░░░░░░░░░██                                          ██▓▓░░░░░░▒▒██      
-  ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░▒▒░░░░░░░░░░░░██                                            ░░████████        
-  ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░▒▒░░░░░░░░▒▒  ▒▒░░░░░░░░▓▓                                                                
-  ░░██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░▒▒░░▒▒░░░░░░░░░░░░██                                                                  
-    ██░░▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒░░▒▒░░░░▓▓                                                                    
-    ░░██░░▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▓▓▒▒▒▒▒▒▒▒▒▒████░░                                                                    
-        ▓▓░░▒▒▒▒▒▒▓▓▓▓░░░░░░░░░░░░▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒██                                                                          
-        ░░▓▓░░▒▒▓▓░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░▒▒░░▒▒▒▒▒▒                                                                        
-            ██▓▓░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░▒▒██                                                                      
-            ░░██░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░▒▒▒▒▒▒                                                                    
-                ██░░░░▒▒▒▒▒▒▒▒▒▒▒▒░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░▒▒▓▓                                                                    
-                  ██▒▒▒▒▒▒░░▒▒▒▒▒▒▒▒░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░▒▒░░▒▒░░▒▒██                                                                  
-                  ░░██░░░░▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░▒▒░░░░░░▒▒▒▒██                                                                  
-                    ██░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓░░▒▒▒▒░░░░▒▒██                                                                  
-                    ██░░  ░░░░▒▒░░▒▒░░▒▒▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒░░▓▓▒▒▒▒▒▒▓▓▓▓▓▓▓▓                                                                
-                      ▓▓░░░░░░░░░░░░▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▒▒░░▒▒▒▒▓▓██                                                              
-                      ▓▓  ░░  ░░░░░░░░▒▒░░▒▒░░▒▒▒▒▒▒▒▒▓▓▓▓▒▒▓▓▒▒▒▒▒▒▒▒▓▓▒▒▓▓██                                                            
-                      ░░██░░▒▒  ░░░░░░░░░░░░░░░░▒▒░░▓▓░░▒▒▒▒▒▒▒▒░░░░▒▒▒▒▒▒▒▒▓▓▓▓                                                          
-                          ████▒▒░░░░  ░░░░░░░░▒▒░░▒▒░░▒▒▓▓▒▒▒▒▒▒▒▒▒▒░░▒▒▒▒▓▓▒▒▓▓██                                                        
-                          ░░  ▓▓▒▒░░░░░░░░░░▒▒░░▒▒░░▒▒▒▒░░▒▒░░▒▒░░▒▒░░▒▒▒▒▒▒▒▒▓▓██                                                        
-                                ░░████▒▒░░▒▒░░██  ▒▒░░▒▒░░▒▒░░▒▒░░▒▒░░▒▒░░▒▒▒▒▒▒██                                                        
-                                      ████████  ████████░░░░░░░░▒▒░░▒▒░░▒▒▒▒░░▒▒██                                                        
-                                                      ░░██░░▒▒░░▒▒░░▒▒░░▒▒▒▒▒▒▓▓░░                                                        
-                                                        ░░▓▓▓▓██▓▓▓▓▓▓▓▓██▓▓▓▓░░                                                          
-                                                                        ░░░░                                                              
-
-"""
-
 
 def main():
     # window parameters
     WINDOW_X, WINDOW_Y = 600, 400
-    REFRESH_RATE = 1/10
+    REFRESH_RATE = 1 / 10
 
     # window initialization
     window = pyglet.window.Window(WINDOW_X, WINDOW_Y, resizable=True)
@@ -96,27 +30,31 @@ def main():
     # board initialization
     game_state = Game([])
     game_state.add_pieces()
-    board = Board(size=300, padding_x=60, padding_y=50, batch=board_batch, pieces=game_state.pieces, pieces_batch=pieces_batch)
+    board = Board(size=300, padding_x=60, padding_y=50, batch=board_batch, pieces=game_state.pieces,
+                  pieces_batch=pieces_batch)
 
-    # shape creation
+    # background creation
     BG = pyglet.shapes.Rectangle(0, 0, WINDOW_X, WINDOW_Y, GUIColors.BACKGROUND.value, batch=background)
 
+    # GUI-class initialization
     GUI_ = GUI(game_state, board)
     GUI_.add_button(button=Button(width=60, height=60, anchor_x=Side.RIGHT, anchor_y=Side.TOP, padding_x=20,
                                   padding_y=20, window_width=window.width, window_height=window.height,
-                                  event="toggle_pause", color_hover=GUIColors.HOVERED_BUTTON.value, color_unhover=GUIColors.NORMAL_BUTTON.value,
+                                  event="toggle_pause", color_hover=GUIColors.HOVERED_BUTTON.value,
+                                  color_unhover=GUIColors.NORMAL_BUTTON.value,
                                   batch=button_batch, window=window, GUI=GUI_, icon="images/pause-button.png"))
 
     GUI_.add_button(button=Button(width=60, height=60, anchor_x=Side.RIGHT, anchor_y=Side.TOP, padding_x=100,
                                   padding_y=20, window_width=window.width, window_height=window.height,
-                                  event="reset", color_hover=GUIColors.HOVERED_BUTTON.value, color_unhover=GUIColors.NORMAL_BUTTON.value,
+                                  event="reset", color_hover=GUIColors.HOVERED_BUTTON.value,
+                                  color_unhover=GUIColors.NORMAL_BUTTON.value,
                                   batch=button_batch, window=window, GUI=GUI_, icon="images/reset-button.png"))
 
     GUI_.add_text(label=pyglet.text.Label("", x=6, y=4, batch=button_batch))
 
     # clock creation
-    GUI_.add_clock(Clock(color=Color.WHITE, batch=clock_batch, padding_x=200, padding_y=150, window_x=WINDOW_X))
-    GUI_.add_clock(Clock(color=Color.BLACK, batch=clock_batch, padding_x=200, padding_y=100, window_x=WINDOW_X))
+    GUI_.add_clock(Clock(color=Color.WHITE, batch=clock_batch, padding_x=200, padding_y=150, window_x=WINDOW_X, GUI=GUI_))
+    GUI_.add_clock(Clock(color=Color.BLACK, batch=clock_batch, padding_x=200, padding_y=100, window_x=WINDOW_X, GUI=GUI_))
     GUI_.clocks[1].do_pause()
 
     def update(dt):  # every frame update
@@ -141,7 +79,7 @@ def main():
             handle_empty_click(x, y, button, modifiers, board)
 
     @window.event
-    def on_key_press(symbol, modifiers):  # keyboard handler TODO: pauze op spatie, restart op F5
+    def on_key_press(symbol, modifiers):  # keyboard handler
         if symbol == pyglet.window.key.SPACE:
             GUI_.press_button("toggle_pause")
         elif symbol == pyglet.window.key.F5 or symbol == pyglet.window.key.R:
@@ -153,15 +91,17 @@ def main():
         handle_button_hover(x, y, GUI_)  # handles button GUI changes based on cursor location
 
     @window.event
-    def on_resize(width, height):
+    def on_resize(width, height):  # handles graphical changes on a resize of the window
         BG.width = width
         BG.height = height
 
+        # this calculates the new size and padding of the board which will be sent through to the pieces and squares
+        # to update their graphics accordingly
         new_board_size = 300 + min(width - WINDOW_X, height - WINDOW_Y)
         board.update_graphics(new_padding_x=(width - new_board_size) / 5, new_padding_y=(height - new_board_size) / 2,
                               new_board_size=new_board_size)
 
-        GUI_.update_graphics(width, height, board)
+        GUI_.update_graphics(width, height, board)  # updates all the graphics of the other GUI objects
 
     @window.event
     def on_draw():  # drawer

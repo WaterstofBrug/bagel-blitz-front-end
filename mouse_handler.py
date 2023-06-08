@@ -1,4 +1,6 @@
-from enumerators import GUIObjects
+"""
+This file handles all the mouse actions performed
+"""
 
 
 def handle_first_click(x, y, button, modifiers, board, game_state):  # handles a first click on the board
@@ -21,16 +23,22 @@ def handle_second_click(x, y, button, modifiers, board, game_state, GUI):  # han
             game_state.is_valid_move(selected_square, clicked_square, board) and \
             not GUI.is_game_paused() and \
             not game_state.get_piececode_given_square(rel_x, rel_y)[0] == game_state.get_players_color():  # allowed to move
+        # move the piece(s) in logic
         game_state.move(selected_square, clicked_square, board)
+
+        # move the piece(s) visually
         piece = board.get_piece(selected_square)
         piece.move_to(rel_x, rel_y)
         board.update_pieces(game_state)
+
+        # handle other visual updates
         board.deselect()
         GUI.update_clocks()
-        if game_state.is_pat(game_state.get_players_color(), board):
+
+        if game_state.is_pat(game_state.get_players_color(), board):  # handle stalemate
             game_state.win_state = "Pat"
             GUI.dispatch_remise("Pat")
-        elif game_state.is_mat(game_state.get_players_color(), board):
+        elif game_state.is_mat(game_state.get_players_color(), board):  # handle mate
             game_state.win_state = game_state.set_winner(game_state.get_players_color(), GUI)
     else:  # selecting a new piece
         handle_first_click(x, y, button, modifiers, board, game_state)
