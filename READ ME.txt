@@ -1,0 +1,41 @@
+By GROUP - 47
+
+REQUIREMENTS TO RUN:
+To run the program you need atleast Python 3.10. 
+
+In addition the program requires the following libraries:
+- enumerate
+- copy
+- pyglet
+
+The first two should be included in the standard library.
+
+To check if pyglet is installed:
+Type: pip list
+Or type: py -m pip list
+
+To install pyglet:
+Type: pip install Pyglet
+Or type: py -m pip install Pyglet
+
+HOW TO RUN:
+You could run the shortcut in the starting directory named 'main-executable'.
+Alternatively you could run main.py in the compiler of your choosing. 
+
+Running the executable could result in the pause-button's sprite dissapearing. This
+still needs to be fixed switching between python 3.10 and 3.11 seems to work.
+
+WHAT SHOULD BE GRADED:
+The files written by us are:
+- board.py
+- button.py
+- clock.py
+- enumerators.py
+- game.py
+- GUI_handler.py
+- main.py
+- mouse_handler.py
+- piece.py
+- square.py
+
+In addition the contents of the 'images' folder was made by us.
